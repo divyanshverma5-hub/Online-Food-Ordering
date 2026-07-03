@@ -1,0 +1,152 @@
+import express from "express"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import env from "dotenv"
+env.config();
+
+import pool from "../config/db.js"
+const saltRounds = 10;
+
+const router = express.Router()
+
+router.post("/registeration", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!email || !password) {
+            return res.json({
+                success: false,
+                msg: "Email and password required"
+            });
+        }
+
+        // Prevent duplicate email
+        const check = await pool.query(
+            "SELECT * FROM users WHERE email = $1",
+            [email]
+        );
+
+        if (check.rows.length > 0) {
+            return res.json({
+                success: false,
+                msg: "Email already exists"
+            });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Save hashed password
+        const result = await pool.query(
+            "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
+            [name, email, hashedPassword]
+        );
+
+        const user = result.rows[0];
+
+        jwt.sign(
+            {
+                name: user.name,
+                id: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRETKEY,
+            { expiresIn: "5d" },
+            (error, token) => {
+
+                if (error) {
+                    return res.json({
+                        success: false,
+                        msg: "Token generation failed"
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    msg: "Signup done",
+                    token
+                });
+            }
+        );
+
+    } catch (err) {
+        console.error(err.message);
+
+        res.json({
+            success: false,
+            msg: "Signup failed"
+        });
+    }
+});
+
+router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.json({
+                success: false,
+                msg: "Email and password required."
+            });
+        }
+
+        // Find user only by email
+        const result = await pool.query(
+            "SELECT * FROM users WHERE email = $1",
+            [email]
+        );
+
+        if (result.rows.length === 0) {
+            return res.json({
+                success: false,
+                msg: "Invalid email or password"
+            });
+        }
+
+        const user = result.rows[0];
+
+        // Compare entered password with stored hash
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            return res.json({
+                success: false,
+                msg: "Invalid email or password"
+            });
+        }
+
+        jwt.sign(
+            {
+                id: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRETKEY,
+            { expiresIn: "5d" },
+            (error, token) => {
+
+                if (error) {
+                    return res.json({
+                        success: false,
+                        msg: "Token generation failed"
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    msg: "Login done",
+                    token
+                });
+            }
+        );
+
+    } catch (err) {
+        console.error(err.message);
+
+        res.json({
+            success: false,
+            msg: "Login failed"
+        });
+    }
+});
+
+export default router;
