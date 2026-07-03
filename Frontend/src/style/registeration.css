@@ -1,0 +1,45 @@
+.container{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);             /* beautiful whats this! */
+}
+
+h3{
+    /* font-weight: 600; */
+    margin: 0.5rem;
+    color: #555;
+}
+
+h1{
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+input, textarea{
+    padding: 0.5rem;
+    margin: 1rem 0rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.btnSubmit{
+    background-color: #0d6efd;
+        /* background-color: red; */
+    color: white;
+    border-radius: 5px;
+    padding: 0.3rem;
+    border-color: transparent;
+    font-size: 1rem;
+    cursor: pointer;       /* new */
+}
+
+button:hover{
+    background-color: blue;
+}
