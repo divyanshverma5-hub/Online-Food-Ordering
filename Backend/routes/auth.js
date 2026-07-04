@@ -5,7 +5,7 @@ import env from "dotenv"
 env.config();
 
 import pool from "../config/db.js"
-const saltRounds = 10;
+const saltRounds = Number(process.env.SALTROUNDS);
 
 const router = express.Router()
 
@@ -145,6 +145,76 @@ router.post("/login", async (req, res) => {
         res.json({
             success: false,
             msg: "Login failed"
+        });
+    }
+});
+
+router.post("/restaurantRegister", async (req, res) => {
+    try {
+        const { owner_name,r_name, email, password , phone, location, city} = req.body;
+
+        if (!email || !password || !city) {
+            return res.json({
+                success: false,
+                msg: "Fill every necessary (*) detail"
+            });
+        }
+
+        // Prevent duplicate email
+        const check = await pool.query(
+            "SELECT * FROM restaurantUsers WHERE email = $1",
+            [email]
+        );
+
+        if (check.rows.length > 0) {
+            return res.json({
+                success: false,
+                msg: "Email already exists"
+            });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Save hashed password
+        const result = await pool.query(
+            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [owner_name, r_name, email, hashedPassword, phone, location, city]
+        );
+
+        const user = result.rows[0];
+
+        jwt.sign(
+            {
+                id: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRETKEY,
+            { expiresIn: "5d" },
+            (error, token) => {
+
+                if (error) {
+                    return res.json({
+                        success: false,
+                        msg: "Token generation failed"
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    msg: "Signup done",
+                    id: user.id,
+                    token
+                });
+            }
+        );
+
+    } catch (err) {
+        console.error(err.message);
+
+        res.json({
+            success: false,
+            msg: "Restaurant Signup failed"
         });
     }
 });

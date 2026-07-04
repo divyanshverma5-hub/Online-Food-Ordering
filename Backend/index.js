@@ -18,6 +18,18 @@ app.use(router)
 
 //home page handle
 
+//home page for restaurant:
+app.get("/homeRestaurant", async (req,res)=>{
+    console.log(req.query.id);
+    let ans = await pool.query("SELECT * FROM restaurantUsers WHERE id = $1",[req.query.id]);
+    ans = ans.rows[0];
+    res.json({
+        success: true,
+        msg: "Backend of Restaurant dashboard",
+        ans: ans
+    })
+})
+
 app.get("/", (req,res)=>{
     res.json({
         success: true,
