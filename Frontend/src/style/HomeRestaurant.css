@@ -1,0 +1,22 @@
+.menuCard{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.box{
+    /* background-color: pink; */
+    /* border: 1px solid black; */
+    margin: 1rem;
+    display: flex;
+    background-color: #f1efef;
+    
+    /* width: 200px; */
+}
+
+.box img{
+    width: 100px;
+    height: 100px;
+}

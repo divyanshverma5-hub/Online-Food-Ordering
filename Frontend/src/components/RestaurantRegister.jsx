@@ -82,8 +82,6 @@ function RestaurantRegister() {
                 <input placeholder="Enter name" type="text" value={data.city} onChange={handleChange} name="city" />
 
 
-
-
                 <button type="submit" className="btnSubmit">Sign Up</button>
                 <Link to="/login">Login</Link>
             </form>

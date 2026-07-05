@@ -43,3 +43,28 @@ input, textarea{
 button:hover{
     background-color: blue;
 }
+
+.overlay{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:100vw;
+    height:100vh;
+
+    background:rgba(0,0,0,.5);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.popup{
+    background: white;
+    width: 40%;
+    padding: 20px;
+    border-radius: 10px;
+
+    max-height: 80vh;
+    overflow-y: auto;
+}

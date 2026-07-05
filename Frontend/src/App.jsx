@@ -9,6 +9,8 @@ import Login from './components/Login'
 import Footer from './components/footer'
 import RestaurantRegister from './components/RestaurantRegister'
 import HomeRestaurant from './components/HomeRestaurant'
+import AddFood from './components/AddFood'
+import EditFood from './components/EditFood'
 
 function App() {
   return (
@@ -22,9 +24,12 @@ function App() {
       <Route path='/footer' element={<Footer/>}/>
       <Route path='/restaurantRegister' element={<RestaurantRegister/>}/>
       <Route path='/homeRestaurant' element={<HomeRestaurant/>}/>
+      <Route path='/addFood' element={<AddFood/>}/>
+      <Route path='/editFood' element={<EditFood/>}/>
+      
     </Routes>
 
-    {/* tomorrow: make the profile page of restaurant owner + home page (cart/orders)  */}
+    {/* make the HOME PAGE OF CUSTOMER (add locationwise R. + map)  */}
     
       <ToastContainer position='bottom-right'/>
     </>
