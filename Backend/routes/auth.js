@@ -219,4 +219,75 @@ router.post("/restaurantRegister", async (req, res) => {
     }
 });
 
+router.post("/restaurantLogin", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.json({
+                success: false,
+                msg: "Email and password required."
+            });
+        }
+
+        // Find user only by email
+        const result = await pool.query(
+            "SELECT * FROM restaurantUsers WHERE email = $1",
+            [email]
+        );
+
+        if (result.rows.length === 0) {
+            return res.json({
+                success: false,
+                msg: "Invalid email or password"
+            });
+        }
+
+        const user = result.rows[0];
+
+        // Compare entered password with stored hash
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            return res.json({
+                success: false,
+                msg: "Invalid email or password"
+            });
+        }
+
+        jwt.sign(
+            {
+                id: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRETKEY,
+            { expiresIn: "5d" },
+            (error, token) => {
+
+                if (error) {
+                    return res.json({
+                        success: false,
+                        msg: "Token generation failed",
+                    });
+                }
+                
+                res.json({
+                    success: true,
+                    msg: "Login done",
+                    token,
+                    id: user.id
+                });
+            }
+        );
+
+    } catch (err) {
+        console.error(err.message);
+
+        res.json({
+            success: false,
+            msg: "Login failed"
+        });
+    }
+});
+
 export default router;

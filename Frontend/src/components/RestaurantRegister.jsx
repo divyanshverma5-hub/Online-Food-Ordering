@@ -19,7 +19,7 @@ function RestaurantRegister() {
 
 
     useEffect(() => {
-        if (localStorage.getItem('login')) {
+        if (localStorage.getItem('login') && localStorage.getItem('id')) {
             toast.info("You are already logged in")
             navigate('/homeRestaurant')
             //NAVIGATE IT TO HOME PAGE OF RESTAURANT SIDE!
@@ -83,7 +83,7 @@ function RestaurantRegister() {
 
 
                 <button type="submit" className="btnSubmit">Sign Up</button>
-                <Link to="/login">Login</Link>
+                <Link to="/restaurantLogin">Login</Link>
             </form>
         </>
     );

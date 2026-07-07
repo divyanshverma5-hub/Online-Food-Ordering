@@ -1,0 +1,10 @@
+.restaurant_card{
+    background-color: pink;
+    display:flex ;
+    flex-direction: column;
+}
+
+.Allrestaurants{
+    background-color: red;
+    display: flex;
+}

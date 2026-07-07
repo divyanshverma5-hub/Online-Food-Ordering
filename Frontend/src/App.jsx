@@ -11,6 +11,8 @@ import RestaurantRegister from './components/RestaurantRegister'
 import HomeRestaurant from './components/HomeRestaurant'
 import AddFood from './components/AddFood'
 import EditFood from './components/EditFood'
+import Home_to_restaurant_page from './components/Home_to_restaurant_page'
+import RestaurantLogin from './components/RestaurantLogin'
 
 function App() {
   return (
@@ -26,10 +28,12 @@ function App() {
       <Route path='/homeRestaurant' element={<HomeRestaurant/>}/>
       <Route path='/addFood' element={<AddFood/>}/>
       <Route path='/editFood' element={<EditFood/>}/>
+      <Route path='/home_to_restaurant_page/:id' element={<Home_to_restaurant_page/>}/>
+      <Route path='/restaurantLogin' element={<RestaurantLogin/>}/>
       
     </Routes>
 
-    {/* make the HOME PAGE OF CUSTOMER (add locationwise R. + map)  */}
+    {/* make the HOME PAGE OF CUSTOMER (map + Add Btn in customer page & make now order + cart pages)  */}
     
       <ToastContainer position='bottom-right'/>
     </>
