@@ -13,11 +13,11 @@ import AddFood from './components/AddFood'
 import EditFood from './components/EditFood'
 import Home_to_restaurant_page from './components/Home_to_restaurant_page'
 import RestaurantLogin from './components/RestaurantLogin'
+import Cart from './components/Cart'
 
 function App() {
   return (
     <>
-    {/* <h1>Home Page</h1> */}
     <Routes>
       
       <Route path='/' element={<Home/>}/>
@@ -30,10 +30,16 @@ function App() {
       <Route path='/editFood' element={<EditFood/>}/>
       <Route path='/home_to_restaurant_page/:id' element={<Home_to_restaurant_page/>}/>
       <Route path='/restaurantLogin' element={<RestaurantLogin/>}/>
+      <Route path='/cart' element={<Cart/>} />
       
     </Routes>
 
-    {/* make the HOME PAGE OF CUSTOMER (map + Add Btn in customer page & make now order + cart pages)  */}
+    {/* (If anybody reading, ignore it, its for me)
+        make the HOME PAGE OF CUSTOMER (make now order) 
+        make : no multiple restaurant ordering
+        Button of place order (then new database and F+B everything starts)
+        Order table , Order Items table , Order Status , Pending , Accepted , Rejected , Delivered
+    */}
     
       <ToastContainer position='bottom-right'/>
     </>

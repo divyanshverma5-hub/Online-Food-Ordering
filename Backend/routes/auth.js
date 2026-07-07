@@ -1,8 +1,6 @@
 import express from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import env from "dotenv"
-env.config();
 
 import pool from "../config/db.js"
 const saltRounds = Number(process.env.SALTROUNDS);
@@ -64,7 +62,8 @@ router.post("/registeration", async (req, res) => {
                 res.json({
                     success: true,
                     msg: "Signup done",
-                    token
+                    token,
+                    id: user.id
                 });
             }
         );
@@ -134,7 +133,8 @@ router.post("/login", async (req, res) => {
                 res.json({
                     success: true,
                     msg: "Login done",
-                    token
+                    token,
+                    id: user.id
                 });
             }
         );

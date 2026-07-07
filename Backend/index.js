@@ -6,6 +6,8 @@ env.config();
 import pool from "./config/db.js"
 import router from "./routes/auth.js"
 import rMenuCrud from "./routes/RMenuCRUD.js"
+import cart from "./routes/cartRelated.js";
+import home from "./routes/landingPage.js";
 
 const app = express()
 const port = 3000
@@ -20,46 +22,20 @@ app.use(cors({
 //authorization:
 app.use(router)
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//home page handle
-
-app.get("/city/:city", async (req, res) => {
-    let city = req.params.city;
-    console.log(city);
-    let result = await pool.query('SELECT * FROM restaurantusers WHERE city = $1', [city]);
-    result = result.rows;
-
-    res.json({
-        success: true,
-        msg: "We got the city",
-        result: result
-    });
-})
-
-app.get("/details", async(req,res)=>{
-    let profile = await pool.query("SELECT * FROM restaurantUsers WHERE id = $1", [req.query.id]);
-    profile = profile.rows[0];
-    
-    let menu = await pool.query("SELECT * FROM food WHERE restaurant_id = $1", [req.query.id]);
-    menu = menu.rows;
-    console.log(menu);
-
-    res.json({
-        success:true,
-        msg:"Here's owner data",
-        profile: profile,
-        menu: menu
-    })
-})
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Restaurant Home Page: 
 app.use(rMenuCrud);
+
+// Cart Page
+app.use(cart)
+
+//home page handle
+app.use(home);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 app.get("/", (req, res) => {

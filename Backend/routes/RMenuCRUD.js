@@ -1,7 +1,4 @@
 import express from "express"
-import env from "dotenv"
-env.config();
-
 import pool from "../config/db.js"
 
 const router = express.Router()

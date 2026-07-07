@@ -17,7 +17,8 @@ export default function Home() {
         "Kolkata",
         "Pune",
         "Jaipur",
-        "Lucknow"
+        "Lucknow",
+        "Gwalior"
     ];
 
     async function getData(selectedCity) {
@@ -59,6 +60,7 @@ export default function Home() {
             <select onChange={handleCity} value={city}>
                 {cities.map(i => <option value={i}>{i}</option>)}
             </select >
+            <Link to="/cart">Cart</Link>
             <h1>Display Restaurants</h1>
             <div className="Allrestaurants">
                 {data.map(i => {
