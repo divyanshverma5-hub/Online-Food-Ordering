@@ -31,7 +31,7 @@ router.get("/cart_menu", async (req, res) => {
     
     let customer_id = req.query.customer_id;
     let result = await pool.query(
-        "SELECT cart.id, cart.quantity ,food.food_name ,food.price ,food.img_url ,food.description ,food.is_veg, food.id FROM cart JOIN food ON cart.food_id = food.id WHERE cart.customer_id = $1 ORDER BY cart.id",
+        "SELECT cart.id, cart.quantity ,food.food_name ,food.price ,food.img_url ,food.description ,food.is_veg, food.id, food.restaurant_id FROM cart JOIN food ON cart.food_id = food.id WHERE cart.customer_id = $1 ORDER BY cart.id",
         [customer_id]);
 
     let total = await pool.query("SELECT food.food_name , food.price , cart.quantity FROM cart JOIN food ON food.id = cart.food_id")

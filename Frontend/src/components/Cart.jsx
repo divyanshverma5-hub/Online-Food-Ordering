@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../style/cart.css"
+import { Link } from "react-router-dom";
 
 function Cart() {
 
     const [data, setData] = useState([])
     const [total, setTotal] = useState([])
+    const [address, setAddress] = useState("")
+    const [off1, setOff] = useState(true);
     let customer_id = localStorage.getItem("id");
 
     let getData = async () => {
@@ -27,12 +30,50 @@ function Cart() {
         await getData();
     }
 
+    async function handleOrder() {
+        let data = await fetch("http://localhost:3000/checkout", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ amount: getSum() })
+        })
+        data = await data.json();
+        const { order } = data;
+
+        data = await fetch("http://localhost:3000/razor_key");
+        data = await data.json();
+        const { key } = data;
+
+        const options = {
+            key,
+            amount: order.amount,
+            currency: "INR",
+            name: "Restaurant name",
+            description: "Payment for ordering food online",
+            image: "https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=",
+            order_id: order.id,
+            callback_url: "http://localhost:3000/paymentVerification",
+            prefill: {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "+919876543210"
+            },
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#3399cc"
+            }
+        };
+        const razor = new Razorpay(options);
+        razor.open();
+    }
+
     useEffect(() => {
         getData();
     }, [])
 
-    // console.log(data)
-    // console.log(total)
+    console.log(data)
+    console.log(total)
 
 
     function getSum() {
@@ -41,6 +82,16 @@ function Cart() {
             sum = sum + (i.price * i.quantity);
         })
         return sum;
+    }
+    async function handleAddress(event) {
+        let name = event.target.value;
+        await setAddress(name);
+
+        if (name != "") {
+            setOff(false);
+        } else {
+            setOff(true);
+        }
     }
 
     return (
@@ -78,7 +129,7 @@ function Cart() {
                     total.map((i) => {
                         return (
 
-                            <tr key = {i.id}>
+                            <tr key={i.id}>
                                 <td>{i.food_name}</td>
                                 <td>{i.price} x {i.quantity}</td>
                                 <td>{i.price * i.quantity}</td>
@@ -90,7 +141,10 @@ function Cart() {
 
             </div>
             <h3>Total : {getSum()}</h3>
-            <h3>Proceed to Pay</h3>  {/* this will link now with rasorPay */}
+            {/* <Link to={"/cart/confirmation"}>Place Order</Link> */}
+            <input placeholder="Fill Address Before Proceeding*" value={address} onChange={handleAddress} />
+
+            <button onClick={handleOrder} disabled={off1}>Place Order</button>
         </>
 
     );

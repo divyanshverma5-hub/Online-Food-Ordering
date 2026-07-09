@@ -61,6 +61,7 @@ export default function Home() {
                 {cities.map(i => <option value={i}>{i}</option>)}
             </select >
             <Link to="/cart">Cart</Link>
+            <Link to="/orders">Orders</Link>
             <h1>Display Restaurants</h1>
             <div className="Allrestaurants">
                 {data.map(i => {

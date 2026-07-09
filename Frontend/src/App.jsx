@@ -14,6 +14,8 @@ import EditFood from './components/EditFood'
 import Home_to_restaurant_page from './components/Home_to_restaurant_page'
 import RestaurantLogin from './components/RestaurantLogin'
 import Cart from './components/Cart'
+import Confirmation from './components/Confirmation'
+import Orders from './components/Orders'
 
 function App() {
   return (
@@ -31,13 +33,16 @@ function App() {
       <Route path='/home_to_restaurant_page/:id' element={<Home_to_restaurant_page/>}/>
       <Route path='/restaurantLogin' element={<RestaurantLogin/>}/>
       <Route path='/cart' element={<Cart/>} />
+      <Route path='/cart/confirmation' element={<Confirmation/>} />
+      <Route path='/orders' element={<Orders/>} />
       
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)
         make the HOME PAGE OF CUSTOMER (make now order) 
         make : no multiple restaurant ordering
-        Button of place order (then new database and F+B everything starts)
+        Connect data with "order" table after verification
+        Then move to Orders from owner side
         Order table , Order Items table , Order Status , Pending , Accepted , Rejected , Delivered
     */}
     
