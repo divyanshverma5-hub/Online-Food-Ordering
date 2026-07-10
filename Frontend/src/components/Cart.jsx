@@ -31,17 +31,18 @@ function Cart() {
     }
 
     async function handleOrder() {
-        let data = await fetch("http://localhost:3000/checkout", {
+        let restaurant_id= data[0].restaurant_id;
+        let result = await fetch("http://localhost:3000/checkout", {
             method: "POST",
             headers: { "Content-type": "application/json" },
-            body: JSON.stringify({ amount: getSum() })
+            body: JSON.stringify({ amount: getSum(), customer_id, restaurant_id, address })
         })
-        data = await data.json();
-        const { order } = data;
+        result = await result.json();
+        const { order } = result;
 
-        data = await fetch("http://localhost:3000/razor_key");
-        data = await data.json();
-        const { key } = data;
+        result = await fetch("http://localhost:3000/razor_key");
+        result = await result.json();
+        const { key } = result;
 
         const options = {
             key,

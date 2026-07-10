@@ -9,6 +9,7 @@ import rMenuCrud from "./routes/RMenuCRUD.js"
 import cart from "./routes/cartRelated.js";
 import home from "./routes/landingPage.js";
 import payment from "./routes/payment.js";
+import orders from "./routes/orders.js";
 
 const app = express()
 const port = 3000
@@ -38,14 +39,12 @@ app.use(payment);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //orders related:
+app.use("/order",orders);
 
-app.post("/place_order", async (req,res)=>{
-    console.log("/place-order");
-    res.json({
-        success: true,
-        msg:"INserted Successfully"
-    })
-})
+// pending owner side!
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

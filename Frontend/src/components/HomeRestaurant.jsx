@@ -49,11 +49,13 @@ function HomeRestaurant() {
     // console.log(food);
     return (
         <>
-            <h1>(R.name) {data.restaurant_name}</h1>
+            <h1>R.name= {data.restaurant_name}</h1>
             <p>Welcome {data.owner_name}!</p>
             <h3>City: {data.city}</h3>
 
             <Link to={'/addFood'}>Add</Link>
+            <br/>
+            <Link to={'/restaurantOrders'}>Orders</Link>
 
             <h1>Menu</h1>
             <div className="menuCard">

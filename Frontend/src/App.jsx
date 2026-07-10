@@ -16,6 +16,7 @@ import RestaurantLogin from './components/RestaurantLogin'
 import Cart from './components/Cart'
 import Confirmation from './components/Confirmation'
 import Orders from './components/Orders'
+import RestaurantOrders from './components/RestaurantOrders'
 
 function App() {
   return (
@@ -35,14 +36,14 @@ function App() {
       <Route path='/cart' element={<Cart/>} />
       <Route path='/cart/confirmation' element={<Confirmation/>} />
       <Route path='/orders' element={<Orders/>} />
-      
+      <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)
-        make the HOME PAGE OF CUSTOMER (make now order) 
+        
         make : no multiple restaurant ordering
-        Connect data with "order" table after verification
-        Then move to Orders from owner side
+        Owner: handle 
+        
         Order table , Order Items table , Order Status , Pending , Accepted , Rejected , Delivered
     */}
     
