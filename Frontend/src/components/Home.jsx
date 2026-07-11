@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 
 import "../style/home.css"
 import Home_to_restaurant_page from "./Home_to_restaurant_page";
+import { toast } from "react-toastify";
 
 export default function Home() {
+    const navigate = useNavigate();
 
     const cities = [
         "Almora",
@@ -30,25 +32,27 @@ export default function Home() {
 
     async function handleCity(event) {
         let selectedCity = event.target.value;
-        // console.log(event.target.value);
-
         setCity(selectedCity);
         localStorage.setItem("city", selectedCity)
         getData(selectedCity);
     }
-
 
     const [data, setData] = useState([]);
     const [city, setCity] = useState(
         localStorage.getItem("city") || "New Delhi"
     );
     // const city = localStorage.getItem("city") || "New Delhi";
-    const navigate = useNavigate();
-
-
+    
     useEffect(() => {
         getData(city);
     }, [])
+
+    function handleLogout() {
+        localStorage.removeItem("id")
+        localStorage.removeItem("login")
+        toast.success("Successfully logged Out")
+        navigate("/")
+    }
 
 
     // console.log(data)
@@ -62,6 +66,7 @@ export default function Home() {
             </select >
             <Link to="/cart">Cart</Link>
             <Link to="/orders">Orders</Link>
+            <button onClick={handleLogout}>Logout</button>
             <h1>Display Restaurants</h1>
             <div className="Allrestaurants">
                 {data.map(i => {

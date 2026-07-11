@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../style/HomeRestaurant.css"
 import EditFood from "./EditFood";
+import { toast } from "react-toastify";
 function HomeRestaurant() {
 
     const [showEdit, setShowEdit] = useState(false);
@@ -45,6 +46,13 @@ function HomeRestaurant() {
         setShowEdit(true);
     }
 
+    function handleLogout() {
+        localStorage.removeItem("id")
+        localStorage.removeItem("login")
+        toast.success("Successfully logged Out")
+        navigate("/")
+    }
+
     // console.log(data);
     // console.log(food);
     return (
@@ -54,8 +62,9 @@ function HomeRestaurant() {
             <h3>City: {data.city}</h3>
 
             <Link to={'/addFood'}>Add</Link>
-            <br/>
+            <br />
             <Link to={'/restaurantOrders'}>Orders</Link>
+            <button onClick={handleLogout}>Logout</button>
 
             <h1>Menu</h1>
             <div className="menuCard">

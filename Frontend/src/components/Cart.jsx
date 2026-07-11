@@ -8,6 +8,7 @@ function Cart() {
     const [total, setTotal] = useState([])
     const [address, setAddress] = useState("")
     const [off1, setOff] = useState(true);
+    const [customerDetail, setCustomerDetail] = useState([])
     let customer_id = localStorage.getItem("id");
 
     let getData = async () => {
@@ -15,6 +16,7 @@ function Cart() {
         result = await result.json();
         setData(result.food)
         setTotal(result.total)
+        setCustomerDetail(result.detail)
     }
 
     async function handleQuantity(event, food_id, qty) {
@@ -48,15 +50,15 @@ function Cart() {
             key,
             amount: order.amount,
             currency: "INR",
-            name: "Restaurant name",
+            name: data[0].restaurant_name,
             description: "Payment for ordering food online",
             image: "https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=",
             order_id: order.id,
             callback_url: "http://localhost:3000/paymentVerification",
             prefill: {
-                "name": "Gaurav Kumar",
-                "email": "gaurav.kumar@example.com",
-                "contact": "+919876543210"
+                "name": customerDetail.name,
+                "email": customerDetail.email,
+                "contact": customerDetail.phone
             },
             notes: {
                 "address": "Razorpay Corporate Office"
@@ -73,8 +75,9 @@ function Cart() {
         getData();
     }, [])
 
-    console.log(data)
-    console.log(total)
+    // console.log(data)
+    // console.log(total)
+    // console.log(customerDetail)
 
 
     function getSum() {
