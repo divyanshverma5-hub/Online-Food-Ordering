@@ -1,10 +1,17 @@
 .restaurant_card{
-    background-color: pink;
+    background-color: #ccc;
     display:flex ;
     flex-direction: column;
+    /* gap: 1rem; */
 }
 
 .Allrestaurants{
-    background-color: red;
+    /* background-color: red; */
     display: flex;
+    gap: 1rem;
+}
+
+.restaurant_card img{
+    height: 120px;
+    width: 120px;
 }

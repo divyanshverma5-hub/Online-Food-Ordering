@@ -44,4 +44,13 @@ router.get("/seeDishes", async(req,res)=>{
     })
 })
 
+router.patch("/changeStatus", async (req,res)=>{
+    // console.log(req.body);
+    await pool.query("UPDATE orders SET status = $1 WHERE id = $2",[req.body.choice , req.body.order_id])
+
+    res.json({
+        success:true
+    })
+})
+
 export default router;

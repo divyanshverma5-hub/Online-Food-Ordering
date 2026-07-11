@@ -10,7 +10,8 @@ function Registeration() {
     const [data, setData] = useState({
         name: "",
         email: "",
-        password: ""
+        password: "",
+        phone:""
     });
 
 
@@ -40,7 +41,7 @@ function Registeration() {
             // navigate("/");
             window.location='/'
         } else{
-            alert("Error occured. Try after some time");
+            toast.error(result.msg);
         }
     }
 
@@ -64,6 +65,8 @@ function Registeration() {
                 <input placeholder="Enter email id" type="email" value={data.email} onChange={handleChange} name="email" />
                 <h3>Password:</h3>
                 <input placeholder="Enter password" value={data.password} onChange={handleChange} name="password" type="password" />
+                <h3>Phone*</h3>
+                <input placeholder="Enter phone number" value={data.phone} onChange={handleChange} name="phone" type="number" />
                 <button type="submit" className="btnSubmit">Sign Up</button>
                 <Link to="/login">Login</Link>
             </form>

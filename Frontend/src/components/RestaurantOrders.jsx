@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import ViewItems from "./ViewItems";
 function RestaurantOrders() {
 
     let restaurant_id = localStorage.getItem("id");
@@ -7,21 +7,18 @@ function RestaurantOrders() {
     const [detail, setDetail] = useState([]);
     const [dishes, setDishes] = useState([]);
     const [show, setShow] = useState("");
-    const [hide, setHide] = useState(false);
 
     let pending = detail.filter((i) => i.status == "Pending");
+    let active = detail.filter((i) => (i.status != "Delivered" && i.status != "Pending" && i.status != "Rejected"))
     let history = detail.filter((i) => (i.status == "Delivered" || i.status == "Rejected"));
 
+    let getData = async () => {
+        let result = await fetch(`http://localhost:3000/order/restaurant/details?id=${restaurant_id}`);
+        result = await result.json();
+        setDetail(result.detail);
+    }
+
     useEffect(() => {
-
-        let getData = async () => {
-            let result = await fetch(`http://localhost:3000/order/restaurant/details?id=${restaurant_id}`);
-
-            result = await result.json();
-            setDetail(result.detail);
-            // console.log(result.detail)
-        }
-
         getData();
     }, [])
 
@@ -40,59 +37,68 @@ function RestaurantOrders() {
         }
     }
 
-    //CONTINUE FROM HERE
 
-    // function handleChoice() {
-    //     let choice = event.target.name
-    //     console.log(choice)
-    //     setHide(true);
+    async function handleChoice(choice, order_id) {
+        console.log(order_id)
+        await fetch("http://localhost:3000/order/changeStatus", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ choice, order_id })
+        })
 
-    //     if (choice === "reject") {
-
-    //     }
-    // }
+        getData();
+    }
 
     // console.log(dishes)
+    // console.log(detail)
 
     return (
         <>
             <h1>Orders:</h1>
-            <h2>🟢 Ongoing Orders </h2>
+            <h2>🟢 New Orders ({pending.length})</h2>
             <hr />
             {pending.map((i) => {
                 return (
                     <div>
                         <h2># Order {i.id}</h2>
-                        <h3>{i.name}</h3>
+                        <h3>Customer name: {i.name}</h3>
                         <h3>₹{i.total_price}</h3>
-                        <h3>Ordered at: {i.order_at}</h3>
+                        <h3>Ordered at: {new Date(i.order_at).toLocaleString()}</h3>
                         <h3>Status: {i.status}</h3>
-                        <button onClick={() => seeDishes(i.id)}>View Items</button>
-                        {/* {(!hide) && <div>
-                            <button onClick={handleChoice} name="accept">Accept</button>
-                            <button onClick={handleChoice} name="reject">Reject</button>
-                        </div>} */}
-                        {show == i.id &&
-                            <div style={{ backgroundColor: "pink" }}>
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dishes.map(i => {
-                                        return (
-                                            <tr>
-                                                <td>{i.food_name}</td>
-                                                <td>{i.price_at_purchase}</td>
-                                                <td>{i.quantity}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </div>}
+                        <button onClick={() => seeDishes(i.id)}>View Details</button>
+
+                        <button onClick={() => handleChoice("Preparing", i.id)}>Accept</button>
+                        <button onClick={() => handleChoice("Rejected", i.id)}>Reject</button>
+
+                        {show == i.id && <ViewItems
+                            order={i}
+                            dishes={dishes} />
+                        }
+                    </div>
+                )
+            })}
+
+            <h2>🟡 Active Orders ({active.length})</h2>
+            <hr />
+            {active.map((i) => {
+                return (
+                    <div>
+                        <h2># Order {i.id}</h2>
+                        <h3>Customer Name: {i.name}</h3>
+                        <h3>₹{i.total_price}</h3>
+                        <h3>Ordered at: {new Date(i.order_at).toLocaleString()}</h3>
+                        <h3>Status: {i.status}</h3>
+                        <select onChange={(e) => handleChoice(e.target.value, i.id)}>
+                            <option value="Preparing">Preparing</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Out for Delivery">Out for Delivery</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                        <button onClick={() => seeDishes(i.id)}>View Details</button>
+
+                        {show == i.id && <ViewItems
+                            order={i}
+                            dishes={dishes} />}
                     </div>
                 )
             })}
@@ -106,29 +112,11 @@ function RestaurantOrders() {
                         <h3>{i.name}</h3>
                         <h3>{i.status}</h3>
                         <h3>₹{i.total_price}</h3>
-                        <h3>{i.order_at}</h3>
-                        <button onClick={() => seeDishes(i.id)}>View Items</button>
-                        {show == i.id &&
-                            <div style={{ backgroundColor: "pink" }}>
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dishes.map(i => {
-                                        return (
-                                            <tr>
-                                                <td>{i.food_name}</td>
-                                                <td>{i.price_at_purchase}</td>
-                                                <td>{i.quantity}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </div>}
+                        <h3>{new Date(i.order_at).toLocaleString()}</h3>
+                        <button onClick={() => seeDishes(i.id)}>View Details</button>
+                        {show == i.id && <ViewItems
+                            order={i}
+                            dishes={dishes} />}
                     </div>
                 )
             })}

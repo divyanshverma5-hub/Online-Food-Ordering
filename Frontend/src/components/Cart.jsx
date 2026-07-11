@@ -31,7 +31,7 @@ function Cart() {
     }
 
     async function handleOrder() {
-        let restaurant_id= data[0].restaurant_id;
+        let restaurant_id = data[0].restaurant_id;
         let result = await fetch("http://localhost:3000/checkout", {
             method: "POST",
             headers: { "Content-type": "application/json" },

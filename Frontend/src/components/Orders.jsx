@@ -23,7 +23,7 @@ function Orders() {
     let history = detail.filter((i) => i.status == "Delivered");
 
     // console.log("pending");
-    console.log(detail);
+    // console.log(detail);
 
     async function seeDishes(order_id) {
         console.log(order_id);
@@ -51,7 +51,7 @@ function Orders() {
                     <div>
                         <h2>{i.restaurant_name}</h2>
                         <h3>₹{i.total_price}</h3>
-                        <h3>Ordered at: {i.order_at}</h3>
+                        <h3>Ordered at: {new Date(i.order_at).toLocaleString()}</h3>
                         <h3>Status: {i.status}</h3>
                         <button onClick={() => seeDishes(i.id)}>View Items</button>
                         {show == i.id &&
@@ -86,7 +86,7 @@ function Orders() {
                         <h2>{i.restaurant_name}</h2>
                         <h3>{i.status}</h3>
                         <h3>₹{i.total_price}</h3>
-                        <h3>{i.order_at}</h3>
+                        <h3>{new Date(i.order_at).toLocaleString()}</h3>
                         <button onClick={() => seeDishes(i.id)}>View Items</button>
                         {show == i.id &&
                             <div style={{ backgroundColor: "pink" }}>

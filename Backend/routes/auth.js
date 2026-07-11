@@ -9,12 +9,12 @@ const router = express.Router()
 
 router.post("/registeration", async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, phone } = req.body;
 
-        if (!email || !password) {
+        if (!email || !password || !phone) {
             return res.json({
                 success: false,
-                msg: "Email and password required"
+                msg: "Essential details required"
             });
         }
 
@@ -36,8 +36,8 @@ router.post("/registeration", async (req, res) => {
 
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
-            [name, email, hashedPassword]
+            "INSERT INTO users (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *",
+            [name, email, hashedPassword, phone]
         );
 
         const user = result.rows[0];
@@ -151,7 +151,7 @@ router.post("/login", async (req, res) => {
 
 router.post("/restaurantRegister", async (req, res) => {
     try {
-        const { owner_name,r_name, email, password , phone, location, city} = req.body;
+        const { owner_name,r_name, email, password , phone, location, city, img_url} = req.body;
 
         if (!email || !password || !city) {
             return res.json({
@@ -178,8 +178,8 @@ router.post("/restaurantRegister", async (req, res) => {
 
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-            [owner_name, r_name, email, hashedPassword, phone, location, city]
+            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city, img_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+            [owner_name, r_name, email, hashedPassword, phone, location, city, img_url]
         );
 
         const user = result.rows[0];

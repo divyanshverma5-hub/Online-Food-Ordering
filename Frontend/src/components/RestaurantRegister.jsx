@@ -14,7 +14,8 @@ function RestaurantRegister() {
         password: "",
         phone:"",
         location:"",
-        city:""
+        city:"",
+        img_url:"https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg"
     });
 
 
@@ -81,6 +82,9 @@ function RestaurantRegister() {
                 <h3>City*</h3>
                 <input placeholder="Enter name" type="text" value={data.city} onChange={handleChange} name="city" />
 
+                    {/* img_url */}
+                <h3>Restaurant Image</h3>
+                <input placeholder="Enter name" type="text" value={data.img_url} onChange={handleChange} name="img_url" />
 
                 <button type="submit" className="btnSubmit">Sign Up</button>
                 <Link to="/restaurantLogin">Login</Link>

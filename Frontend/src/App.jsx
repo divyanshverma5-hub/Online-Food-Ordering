@@ -17,6 +17,7 @@ import Cart from './components/Cart'
 import Confirmation from './components/Confirmation'
 import Orders from './components/Orders'
 import RestaurantOrders from './components/RestaurantOrders'
+import ViewItems from './components/ViewItems'
 
 function App() {
   return (
@@ -37,14 +38,13 @@ function App() {
       <Route path='/cart/confirmation' element={<Confirmation/>} />
       <Route path='/orders' element={<Orders/>} />
       <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
+      <Route path='/viewItems' element={<ViewItems/>}/>
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)
-        
-        make : no multiple restaurant ordering
-        Owner: handle 
-        
-        Order table , Order Items table , Order Status , Pending , Accepted , Rejected , Delivered
+        // route protection
+        //default in payment page
+        //if order rejected then 
     */}
     
       <ToastContainer position='bottom-right'/>

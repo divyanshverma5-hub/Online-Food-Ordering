@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Home_to_restaurant_page() {
     const { id } = useParams();
@@ -34,6 +35,14 @@ function Home_to_restaurant_page() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ food_id, customer_id })
         });
+
+        result = await result.json();
+
+        if (result.success){
+            toast.success(result.msg);
+        } else{
+            toast.error(result.msg);
+        }
     }
 
     return (
