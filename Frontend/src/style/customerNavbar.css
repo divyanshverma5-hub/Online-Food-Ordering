@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.navbar{
+    background-color: rgb(156, 248, 179);
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5rem 0rem;
+}

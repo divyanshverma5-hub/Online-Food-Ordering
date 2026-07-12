@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ViewItems from "./ViewItems";
+import RestaurantNavbar from "./RestaurantNavbar";
 function RestaurantOrders() {
 
     let restaurant_id = localStorage.getItem("id");
@@ -54,6 +55,7 @@ function RestaurantOrders() {
 
     return (
         <>
+        <RestaurantNavbar />
             <h1>Orders:</h1>
             <h2>🟢 New Orders ({pending.length})</h2>
             <hr />

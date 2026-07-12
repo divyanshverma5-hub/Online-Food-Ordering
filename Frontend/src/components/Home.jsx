@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import "../style/home.css"
 import Home_to_restaurant_page from "./Home_to_restaurant_page";
 import { toast } from "react-toastify";
+import CustomerNavbar from "./CustomerNavbar";
 
 export default function Home() {
     const navigate = useNavigate();
@@ -53,20 +54,21 @@ export default function Home() {
         toast.success("Successfully logged Out")
         navigate("/")
     }
-
-
     // console.log(data)
+    // function guest(){
+    //     if (localStorage.)
+    // }
     return (
         <>
-            <h1>Home Page</h1>
-            <Link to="/login">Login</Link>
-            <Link to="/registeration">Register</Link>
-            <select onChange={handleCity} value={city}>
-                {cities.map(i => <option value={i}>{i}</option>)}
-            </select >
-            <Link to="/cart">Cart</Link>
-            <Link to="/orders">Orders</Link>
-            <button onClick={handleLogout}>Logout</button>
+            <h1>Home Page (App Name)</h1>
+            <CustomerNavbar
+            cities= {cities}
+            city= {city}
+            handleCity= {handleCity}
+            isHome= {true}
+            isGuest= {!localStorage.getItem("id")}
+            />
+
             <h1>Display Restaurants</h1>
             <div className="Allrestaurants">
                 {data.map(i => {

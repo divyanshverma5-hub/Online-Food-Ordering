@@ -18,6 +18,9 @@ import Confirmation from './components/Confirmation'
 import Orders from './components/Orders'
 import RestaurantOrders from './components/RestaurantOrders'
 import ViewItems from './components/ViewItems'
+import CustomerNavbar from './components/CustomerNavbar'
+import RestaurantNavbar from './components/RestaurantNavbar'
+
 
 function App() {
   return (
@@ -39,6 +42,8 @@ function App() {
       <Route path='/orders' element={<Orders/>} />
       <Route path='/restaurantOrders' element={<RestaurantOrders/>}/>
       <Route path='/viewItems' element={<ViewItems/>}/>
+      <Route path='/customerNavbar' element={<CustomerNavbar/>}/>
+      <Route path='/restaurantNavbar' element={<RestaurantNavbar/>}/>
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)

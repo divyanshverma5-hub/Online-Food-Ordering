@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import CustomerNavbar from "./CustomerNavbar";
 function Orders() {
 
     let customer_id = localStorage.getItem("id");
@@ -43,6 +43,7 @@ function Orders() {
 
     return (
         <>
+            <CustomerNavbar/>
             <h1>Orders History</h1>
 
             <h2>🟢 Ongoing Orders </h2>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/cart.css"
 import { Link } from "react-router-dom";
+import CustomerNavbar from "./CustomerNavbar";
 
 function Cart() {
 
@@ -100,6 +101,7 @@ function Cart() {
 
     return (
         <>
+            <CustomerNavbar/>
             <h1>Cart</h1>
             {data.map((i) => (
                 <div className="box" key={i.id}>

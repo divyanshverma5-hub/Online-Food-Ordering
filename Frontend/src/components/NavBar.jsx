@@ -1,1 +1,0 @@
-//make it for the navbar containing (Location, login/register, logout, order, cart)

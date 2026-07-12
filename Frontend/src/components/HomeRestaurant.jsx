@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../style/HomeRestaurant.css"
 import EditFood from "./EditFood";
 import { toast } from "react-toastify";
+import RestaurantNavbar from "./RestaurantNavbar";
 function HomeRestaurant() {
 
     const [showEdit, setShowEdit] = useState(false);
@@ -58,13 +59,11 @@ function HomeRestaurant() {
     return (
         <>
             <h1>R.name= {data.restaurant_name}</h1>
-            <p>Welcome {data.owner_name}!</p>
+            {/* <p>Welcome {data.owner_name}!</p> */}
             <h3>City: {data.city}</h3>
-
-            <Link to={'/addFood'}>Add</Link>
-            <br />
-            <Link to={'/restaurantOrders'}>Orders</Link>
-            <button onClick={handleLogout}>Logout</button>
+            <RestaurantNavbar
+                isHome={true}
+            />
 
             <h1>Menu</h1>
             <div className="menuCard">
