@@ -42,8 +42,9 @@ export default function Home() {
     const [city, setCity] = useState(
         localStorage.getItem("city") || "New Delhi"
     );
+    const [searchData, setSearchData] = useState([])
     // const city = localStorage.getItem("city") || "New Delhi";
-    
+
     useEffect(() => {
         getData(city);
     }, [])
@@ -54,20 +55,33 @@ export default function Home() {
         toast.success("Successfully logged Out")
         navigate("/")
     }
-    // console.log(data)
-    // function guest(){
-    //     if (localStorage.)
-    // }
+    console.log("SetSearchData");
+    console.log(searchData);
     return (
         <>
             
             <CustomerNavbar
-            cities= {cities}
-            city= {city}
-            handleCity= {handleCity}
-            isHome= {true}
-            isGuest= {!localStorage.getItem("id")}
+                cities={cities}
+                city={city}
+                handleCity={handleCity}
+                isHome={true}
+                isGuest={!localStorage.getItem("id")}
+                setSearchData={setSearchData}
             />
+            <h1>Display Restaurants (based on search)</h1>
+            <div className="Allrestaurants">
+                {searchData.map(i => {
+                    return (
+                        <div className="restaurant_card">
+                            <h3>{i.restaurant_name}</h3>
+                            <img src={i.img_url} alt={i.restaurant_name} />
+                            <button onClick={() => navigate(`/home_to_restaurant_page/${i.id}`)}>Open</button>
+
+                            {/* later add the option of open/close(by comparing his closing time with current time) */}
+                        </div>)
+                })}
+            </div>
+
 
             <h1>Display Restaurants</h1>
             <div className="Allrestaurants">
@@ -76,8 +90,8 @@ export default function Home() {
                         <div className="restaurant_card">
                             <h3>{i.restaurant_name}</h3>
                             <img src={i.img_url} alt={i.restaurant_name} />
-                            <button onClick={()=> navigate(`/home_to_restaurant_page/${i.id}`)}>Open</button>
-                            
+                            <button onClick={() => navigate(`/home_to_restaurant_page/${i.id}`)}>Open</button>
+
                             {/* later add the option of open/close(by comparing his closing time with current time) */}
                         </div>)
                 })}

@@ -4,6 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 function EditFood({ food, close }) {
 
+    const categories = [
+        "Pizza",
+        "Burger",
+        "Chinese",
+        "North Indian",
+        "South Indian",
+        "Biryani",
+        "Rolls",
+        "Sandwich",
+        "Fast Food",
+        "Desserts",
+        "Ice Cream",
+        "Beverages",
+        "Bakery",
+        "Street Food",
+        "Momos",
+        "Pasta",
+        "Salads",
+        "Healthy Food",
+        "Coffee",
+        "Juices"
+    ]
+
     const [data, setData] = useState(food);
 
     const navigate = useNavigate();
@@ -27,19 +50,14 @@ function EditFood({ food, close }) {
     }
 
     async function handleSave() {
-        console.log(data)
-
+        // console.log(data)
         let result = await fetch(`http://localhost:3000/homeRestaurant/edit`, {
             method: "PATCH",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ data })
         });
-        // result = result.json();
         window.location = "/homeRestaurant"
-        // if (result.success){
-
-        // }
     }
 
     return (
@@ -61,8 +79,17 @@ function EditFood({ food, close }) {
                     <input type="checkbox" name="is_veg" checked={data.is_veg} onClick={handleChoice} />
                     <h3>Is Veg</h3>
                 </div>
+
                 <h3>Category: </h3>
-                <input placeholder="Enter category" type="text" value={data.category} onChange={handleChange} name="category" />
+                <select onChange={handleChange} name="category">
+                    {categories.map((i) => {
+                        return (
+                            <option value={i}>{i}</option>
+                        )
+                    })}
+                </select>                
+
+                {/* <input placeholder="Enter category" type="text" value={data.category} onChange={handleChange} name="category" /> */}
 
                 <h3>Image: </h3>
                 <input placeholder="Enter image URL" type="text" value={data.img_url} onChange={handleChange} name="img_url" />

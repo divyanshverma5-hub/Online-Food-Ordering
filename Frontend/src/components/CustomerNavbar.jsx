@@ -1,17 +1,33 @@
-import React from "react";
-import {Link,useNavigate} from "react-router-dom";
-import {toast} from "react-toastify";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../style/customerNavbar.css";
 
-function CustomerNavbar({city,cities,handleCity,isHome,isGuest}){
-    const navigate=useNavigate();
-    function handleLogout(){
+function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchData }) {
+    const navigate = useNavigate();
+    const [searchText, setSearchText] = useState("")
+
+    function handleLogout() {
         localStorage.removeItem("id");
         localStorage.removeItem("login");
         toast.success("Successfully logged Out");
         navigate("/");
     }
-    return(
+
+    async function SearchButton() {
+        if (searchText == "") {
+            toast.warning("Please write something to search")
+        }
+        let city = localStorage.getItem("city") || "New Delhi"
+        let result = await fetch(`http://localhost:3000/search?category=${searchText}&city=${city}`)
+        result = await result.json();
+
+        // console.log(result);
+        setSearchData(result.restaurants);
+        navigate("/")
+    }
+    // console.log(searchText);
+    return (
         <div className="navbar">
             <Link to="/" className="nav-brand">
                 FoodHub
@@ -34,7 +50,7 @@ function CustomerNavbar({city,cities,handleCity,isHome,isGuest}){
                 }
                 {isHome && cities &&
                     <select className="nav-city" onChange={handleCity} value={city}>
-                        {cities.map((i)=>
+                        {cities.map((i) =>
                             <option key={i} value={i}>
                                 {i}
                             </option>
@@ -43,9 +59,10 @@ function CustomerNavbar({city,cities,handleCity,isHome,isGuest}){
                 }
             </div>
             <div className="nav-search">
-                <p>
-                    SearchBar
-                </p>
+                <div>
+                    <input placeholder="Search here..." value={searchText} onChange={(event) => setSearchText(event.target.value)} />
+                    <button onClick={SearchButton}>Search</button>
+                </div>
             </div>
             <div className="nav-right">
                 {!isGuest &&
