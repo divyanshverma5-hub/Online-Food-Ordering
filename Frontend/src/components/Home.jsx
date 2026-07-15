@@ -60,7 +60,7 @@ export default function Home() {
     // }
     return (
         <>
-            <h1>Home Page (App Name)</h1>
+            
             <CustomerNavbar
             cities= {cities}
             city= {city}

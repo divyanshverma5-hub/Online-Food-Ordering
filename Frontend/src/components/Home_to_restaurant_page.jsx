@@ -1,79 +1,106 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import React,{useEffect,useState} from "react";
+import {useParams} from "react-router-dom";
+import {toast} from "react-toastify";
+import CustomerNavbar from "./CustomerNavbar";
+import "../style/HomeRestaurant.css";
 
-function Home_to_restaurant_page() {
-    const { id } = useParams();
-    console.log(id);
-
-    const [menu, setMenu] = useState([])
-    const [data, setData] = useState([])
-
-    useEffect(() => {
-        const getData = async () => {
-            let result = await fetch(`http://localhost:3000/details?id=${id}`)
-            result = await result.json();
-            let profile = result.profile;
-            let Menu = result.menu
-            // console.log(result)
-
+function Home_to_restaurant_page(){
+    const{id}=useParams();
+    const[menu,setMenu]=useState([]);
+    const[data,setData]=useState([]);
+    const[search,setSearch]=useState("");
+    useEffect(()=>{
+        const getData=async()=>{
+            let result=await fetch(`http://localhost:3000/details?id=${id}`);
+            result=await result.json();
+            let profile=result.profile;
+            let Menu=result.menu;
             setData(profile);
-            setMenu(Menu)
+            setMenu(Menu);
         }
         getData();
-
-    }, [])
-    // console.log("data")
-    // console.log(data)
-
-    async function handleAdd(food_id) {
-        console.log("Add");
-        let customer_id = localStorage.getItem("id");
-        let result = await fetch("http://localhost:3000/addToCart",{
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ food_id, customer_id })
+    },[]);
+    async function handleAdd(food_id){
+        let customer_id=localStorage.getItem("id");
+        let result=await fetch("http://localhost:3000/addToCart",{
+            method:"POST",
+            credentials:"include",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({food_id,customer_id})
         });
-
-        result = await result.json();
-
-        if (result.success){
+        result=await result.json();
+        if(result.success){
             toast.success(result.msg);
-        } else{
+        }
+        else{
             toast.error(result.msg);
         }
     }
-
-    return (
+    const filteredMenu=menu.filter((i)=>
+        i.food_name.toLowerCase().includes(search.toLowerCase())
+    );
+    const categories=[...new Set(filteredMenu.map((i)=>i.category))];
+    return(
         <>
-            <h1>{data.restaurant_name}</h1>
-            <h1>Menu</h1>
-            <div className="menuCard">
-
-                {menu.map((i) => (
-                    <div className="box">
-
-                        <img src={i.img_url} alt={i.food_name} />
-
-                        <div>
-                            <h2>{i.food_name}</h2>
-                            <p>{i.description}</p>
-                            <h3>₹{i.price}</h3>
-
-                            <button onClick={()=>handleAdd(i.id)}>Add</button>
-
-                        </div>
-
-                    </div>
-                ))}
-
+            <CustomerNavbar isGuest={!localStorage.getItem("id")} />
+            <div className="rhero" style={{backgroundImage:`url(${data.img_url})`}}>
+                <div className="rhero-overlay">
+                    <h1>{data.restaurant_name}</h1>
+                    <p>{data.location}</p>
+                </div>
+            </div>
+            <div className="rpage">
+                <aside className="rside">
+                    <input
+                        className="rsearch"
+                        placeholder="Search within menu"
+                        value={search}
+                        onChange={(e)=>setSearch(e.target.value)}
+                    />
+                    <nav className="rcatnav">
+                        {categories.map((c)=>
+                            <a key={c} href={`#${c}`}>
+                                {c}
+                            </a>
+                        )}
+                    </nav>
+                </aside>
+                <main className="rmain">
+                    {categories.map((cat)=>
+                        <section key={cat} id={cat}>
+                            <h2 className="rsection-title">
+                                {cat}
+                            </h2>
+                            <div className="menuCard">
+                                {filteredMenu.filter((i)=>i.category===cat).map((i)=>
+                                    <div className="box" key={i.id}>
+                                        <div className="box-info">
+                                            <span className={`vegdot ${i.is_veg?"veg":"nonveg"}`}></span>
+                                            <h3>
+                                                {i.food_name}
+                                            </h3>
+                                            <p>
+                                                {i.description}
+                                            </p>
+                                            <span className="price">
+                                                ₹{i.price}
+                                            </span>
+                                        </div>
+                                        <div className="box-imgwrap">
+                                            <img src={i.img_url} alt={i.food_name} />
+                                            <button onClick={()=>handleAdd(i.id)}>
+                                                ADD
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    )}
+                </main>
             </div>
         </>
-
-
-
-    )
+    );
 }
 
 export default Home_to_restaurant_page;

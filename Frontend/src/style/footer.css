@@ -1,0 +1,71 @@
+.ftr{
+    position:relative;
+    background:#f2ede4;
+    padding:60px 40px 30px;
+    margin-top:20px;
+}
+.ftr-zigzag{
+    position:absolute;
+    top:-24px;
+    left:0;
+    right:0;
+    height:24px;
+    background:linear-gradient(135deg,transparent 50%,#f2ede4 50%) 0 0/48px 24px repeat-x,
+               linear-gradient(225deg,transparent 50%,#f2ede4 50%) 24px 0/48px 24px repeat-x;
+}
+.ftr-inner{
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    gap:80px;
+    flex-wrap:wrap;
+}
+.ftr-brand{
+    max-width:280px;
+}
+.ftr-logo{
+    font-size:22px;
+    font-weight:800;
+    color:#16a34a;
+}
+.ftr-brand p{
+    margin-top:10px;
+    font-size:14px;
+    color:#6b7280;
+}
+.ftr-col{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.ftr-col h4{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:#1f2937;
+    margin-bottom:4px;
+}
+.ftr-col a{
+    color:#1f2937;
+    text-decoration:underline;
+    font-size:15px;
+}
+.ftr-col a:hover{
+    color:#16a34a;
+}
+.ftr-top{
+    position:absolute;
+    right:40px;
+    bottom:30px;
+    background:#1f2937;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:12px 20px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+.ftr-top:hover{
+    background:#16a34a;
+}
