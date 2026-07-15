@@ -1,14 +1,14 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/orders.css"
 
-function Orders(){
-    let customer_id=localStorage.getItem("id");
-    const[detail, setDetail]=useState([]);
-    const[dishesMap, setDishesMap]=useState({});
-    const[tab, setTab]=useState("ongoing");
-    useEffect(()=>{
-        let getData=async()=>{
+function Orders() {
+    let customer_id = localStorage.getItem("id");
+    const [detail, setDetail] = useState([]);
+    const [dishesMap, setDishesMap] = useState({});
+    const [tab, setTab] = useState("ongoing");
+    useEffect(() => {
+        let getData = async () => {
             let result = await fetch(`http://localhost:3000/order/details?id=${customer_id}`);
             result = await result.json();
             setDetail(result.detail);
@@ -21,29 +21,29 @@ function Orders(){
             setDishesMap(map);
         }
         getData();
-    },[])
+    }, [])
 
-    let pending=detail.filter((i)=>i.status!="Delivered");
-    let history=detail.filter((i)=>i.status=="Delivered");
+    let pending = detail.filter((i) => i.status !== "Delivered" && i.status !== "Rejected");
+    let history = detail.filter((i) => i.status === "Delivered" || i.status === "Rejected");
 
-    function statusClass(status){
-        if(status==="Delivered") return "badge badge-delivered";
-        if(status==="Out for delivery") return "badge badge-transit";
-        if(status==="Rejected") return "badge badge-rejected";
+    function statusClass(status) {
+        if (status === "Delivered") return "badge badge-delivered";
+        if (status === "Out for delivery") return "badge badge-transit";
+        if (status === "Rejected") return "badge badge-rejected";
         return "badge badge-preparing";
     }
 
-    function formatMeta(order){
-        let date=new Date(order.order_at);
-        let today=new Date();
-        let isToday=date.toDateString()===today.toDateString();
-        let time=date.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-        let day=isToday?"Today" : date.toLocaleDateString();
-        return`${day},${time}•#SR-${order.id}`;
+    function formatMeta(order) {
+        let date = new Date(order.order_at);
+        let today = new Date();
+        let isToday = date.toDateString() === today.toDateString();
+        let time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        let day = isToday ? "Today" : date.toLocaleDateString();
+        return `${day},${time} •#SR-${order.id}`;
     }
 
-    function OrderCard({ order }){
-        let dishes=dishesMap[order.id] || [];
+    function OrderCard({ order }) {
+        let dishes = dishesMap[order.id] || [];
 
         return (
             <div className="order-card">

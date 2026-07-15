@@ -37,7 +37,9 @@ function Registeration() {
         if (result.success) {
             document.cookie = "token=" + result.token
             localStorage.setItem('login', data.email);
+            localStorage.setItem('name', data.name);
             localStorage.setItem('id', result.id);
+            localStorage.setItem("role", "customer");
             // navigate("/");
             window.location='/'
         } else{

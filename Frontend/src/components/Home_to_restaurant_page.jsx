@@ -1,4 +1,3 @@
-// <<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -43,7 +42,6 @@ function Home_to_restaurant_page() {
     const categories = [...new Set(filteredMenu.map((i) => i.category))];
     return (
         <>
-            {/* <<<<<<< Updated upstream */}
             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
             {/* <CustomerNavbar /> */}
             <div className="rhero" style={{ backgroundImage: `url(${data.img_url})` }}>

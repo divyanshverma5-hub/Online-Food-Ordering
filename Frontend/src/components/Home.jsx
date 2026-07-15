@@ -10,6 +10,12 @@ import CustomerNavbar from "./CustomerNavbar";
 export default function Home() {
     const navigate = useNavigate();
 
+    function handleDetectedCity(detectedCity) {
+        setCity(detectedCity);
+        localStorage.setItem("city", detectedCity);
+        getData(detectedCity);
+    }
+
     const cities = [
         "Almora",
         "New Delhi",
@@ -59,7 +65,7 @@ export default function Home() {
     console.log(searchData);
     return (
         <>
-            
+
             <CustomerNavbar
                 cities={cities}
                 city={city}
@@ -67,6 +73,7 @@ export default function Home() {
                 isHome={true}
                 isGuest={!localStorage.getItem("id")}
                 setSearchData={setSearchData}
+                handleDetectedCity={handleDetectedCity}
             />
             <h1>Display Restaurants (based on search)</h1>
             <div className="Allrestaurants">

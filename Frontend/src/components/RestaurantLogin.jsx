@@ -13,7 +13,7 @@ function RestaurantLogin() {
     });
 
     useEffect(()=>{
-        if (localStorage.getItem('login') && localStorage.getItem('id')){
+        if (localStorage.getItem('role')=="restaurant"){
             toast.info("You are already logged in")
             navigate('/')
         }
@@ -30,11 +30,13 @@ function RestaurantLogin() {
             body: JSON.stringify(data)
         });
         result = await result.json();
-        console.log(result);
+        // console.log(result);
         if (result.success) {
             document.cookie = "token=" + result.token;
             localStorage.setItem('id', result.id);
+            localStorage.setItem('name', result.name);
             localStorage.setItem('login', data.email);
+            localStorage.setItem("role", "restaurant");
             window.location = "/homeRestaurant";
         } else {
             alert("Try after sometime!");
