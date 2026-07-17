@@ -23,7 +23,7 @@ export async function seeOrderDishes(req, res) {
 export async function restaurantOrderDetails(req, res) {
     let { id } = req.query;
 
-    let result = await pool.query("SELECT orders.address, orders.id, orders.order_at, users.name , orders.status, orders.total_price, users.phone FROM orders JOIN users ON orders.customer_id = users.id WHERE restaurant_id = ($1)", [id]);
+    let result = await pool.query("SELECT orders.address, orders.id, orders.order_at, users.name , orders.status, orders.total_price, users.phone FROM orders JOIN users ON orders.customer_id = users.id WHERE restaurant_id = ($1) ORDER BY orders.order_at DESC", [id]);
     result = result.rows
 
     res.json({

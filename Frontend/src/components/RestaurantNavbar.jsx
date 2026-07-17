@@ -5,19 +5,23 @@ import { toast } from "react-toastify";
 import "../style/customerNavbar.css"
 
 
-function RestaurantNavbar({isHome}) {
+function RestaurantNavbar({ isHome }) {
     const navigate = useNavigate();
     function handleLogout() {
         localStorage.removeItem("id")
         localStorage.removeItem("login")
+        localStorage.removeItem("role");
+        localStorage.removeItem("name");
         toast.success("Successfully logged Out")
         navigate("/")
     }
+    const name = localStorage.getItem("name") || "Customer";
+    const firstName = name?.split(" ")[0];
 
     return (
         <div className="navbar">
-            <p>👤 {localStorage.getItem("name") || "Owner"}</p>
-            
+            <p>👤 {firstName}</p>
+
             {!isHome && <Link to={'/homeRestaurant'}>Dashboard</Link>}
             <Link to={'/restaurantOrders'}>Orders</Link>
             <Link to={'/addFood'}>Add Food</Link>

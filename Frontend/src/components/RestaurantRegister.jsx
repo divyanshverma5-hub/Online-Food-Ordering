@@ -20,13 +20,12 @@ function RestaurantRegister() {
 
 
     useEffect(() => {
-        if (localStorage.getItem('login') && localStorage.getItem('id')) {
+        if (localStorage.getItem('role')=="restaurant") {
             toast.info("You are already logged in")
             navigate('/homeRestaurant')
             //NAVIGATE IT TO HOME PAGE OF RESTAURANT SIDE!
         }
     })
-
 
     const navigate = useNavigate();
 
@@ -42,12 +41,12 @@ function RestaurantRegister() {
         if (result.success) {
             document.cookie = "token=" + result.token
             localStorage.setItem('login', data.email);
+            localStorage.setItem('name', data.owner_name);
             localStorage.setItem('id', result.id);
-            
+            localStorage.setItem("role", "restaurant");
             window.location='/homeRestaurant'
         } else{
             toast.error(result.msg);
-            // alert("Error occured. Try after some time");
         }
     }
 

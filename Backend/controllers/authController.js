@@ -131,7 +131,8 @@ export async function authLogin(req,res) {
                     success: true,
                     msg: "Login done",
                     token,
-                    id: user.id
+                    id: user.id,
+                    name: user.name
                 });
             }
         );
@@ -272,7 +273,8 @@ export async function authRestaurantLogin(req,res) {
                     success: true,
                     msg: "Login done",
                     token,
-                    id: user.id
+                    id: user.id,
+                    name: user.owner_name
                 });
             }
         );

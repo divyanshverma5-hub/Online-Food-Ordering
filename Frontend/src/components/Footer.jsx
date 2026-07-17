@@ -1,14 +1,23 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "../style/footer.css";
 
 function Footer(){
-
+    const navigate = useNavigate();
     function toTop(){
         window.scrollTo({
             top:0,
             behavior:"smooth"
         });
+    }
+
+    function handleWork(){
+        const role = localStorage.getItem("role");
+        if (role == "restaurant"){
+            navigate("/homeRestaurant");
+        } else{
+            navigate("/restaurantLogin");
+        }
     }
 
     return(
@@ -32,9 +41,10 @@ function Footer(){
                     <Link to="/">
                         Home
                     </Link>
-                    <Link to="/restaurantRegister">
+                    {/* <Link to="/restaurantRegister">
                         Work with us
-                    </Link>
+                    </Link> */}
+                    <a onClick={handleWork}>Work with us</a>
                 </div>
             </div>
 
