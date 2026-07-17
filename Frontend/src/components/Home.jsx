@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Footer from "./Footer";
 import { useEffect, useState } from "react";
 
@@ -7,8 +7,14 @@ import Home_to_restaurant_page from "./Home_to_restaurant_page";
 import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 export default function Home() {
     const navigate = useNavigate();
+    const location = useLocation()
+
+    const params = new URLSearchParams(location.search);
+    const search = params.get("search");
 
     function handleDetectedCity(detectedCity) {
         setCity(detectedCity);
@@ -51,9 +57,23 @@ export default function Home() {
     const [searchData, setSearchData] = useState([])
     // const city = localStorage.getItem("city") || "New Delhi";
 
+    async function getRestaurantBySearch(searchText) {
+        let pendingSearch = localStorage.getItem("pendingSearch")
+        let result = await fetch(`http://localhost:3000/search?category=${searchText}&city=${city}`)
+        result = await result.json()
+
+        setSearchData(result.restaurants);
+    }
+
     useEffect(() => {
         getData(city);
-    }, [])
+    }, [city])
+
+    useEffect(() => {
+        if (search) {
+            getRestaurantBySearch(search);
+        }
+    }, [city, search]);
 
     function handleLogout() {
         localStorage.removeItem("id")
@@ -61,10 +81,9 @@ export default function Home() {
         toast.success("Successfully logged Out")
         navigate("/")
     }
-    
+
     return (
         <>
-
             <CustomerNavbar
                 cities={cities}
                 city={city}
@@ -74,19 +93,25 @@ export default function Home() {
                 setSearchData={setSearchData}
                 handleDetectedCity={handleDetectedCity}
             />
-            <h1>Display Restaurants (based on search)</h1>
-            <div className="Allrestaurants">
-                {searchData.map(i => {
-                    return (
-                        <div className="restaurant_card">
-                            <h3>{i.restaurant_name}</h3>
-                            <img src={i.img_url} alt={i.restaurant_name} />
-                            <button onClick={() => navigate(`/home_to_restaurant_page/${i.id}`)}>Open</button>
 
-                            {/* later add the option of open/close(by comparing his closing time with current time) */}
-                        </div>)
-                })}
+            {search && <>
+            <div style={{display:"flex", justifyContent:"center"}}>
+                <h1>Restaurants (Serving {search})</h1>
+                <button onClick={()=>navigate("/")}>❌</button>
             </div>
+                <div className="Allrestaurants">
+                    {searchData.map(i => {
+                        return (
+                            <div className="restaurant_card">
+                                <h3>{i.restaurant_name}</h3>
+                                <img src={i.img_url} alt={i.restaurant_name} />
+                                <button onClick={() => navigate(`/home_to_restaurant_page/${i.id}`)}>Open</button>
+
+                                {/* later add the option of open/close(by comparing his closing time with current time) */}
+                            </div>)
+                    })}
+                </div>
+            </>}
 
 
             <h1>Display Restaurants</h1>

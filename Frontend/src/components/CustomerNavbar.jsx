@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../style/customerNavbar.css";
+import ProfileCustomer from "./ProfileCustomer.jsx";
 
 function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchData, handleDetectedCity }) {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
         toast.success("Successfully logged Out");
         navigate("/");
     }
-    
+
     // GPS Location: 
     async function handleLocation() {
         navigator.geolocation.getCurrentPosition(
@@ -48,37 +49,28 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
         if (searchText == "") {
             toast.warning("Please write something to search")
         }
-        let city = localStorage.getItem("city") || "New Delhi"
-        let result = await fetch(`http://localhost:3000/search?category=${searchText}&city=${city}`)
-        result = await result.json();
-
-        setSearchData(result.restaurants);
-        navigate("/")
+        else {
+            // localStorage.setItem("pendingSearch", searchText);
+            // navigate(`/?search=${searchText}`)
+            navigate(`/?search=${encodeURIComponent(searchText)}`);
+        }
     }
+
     const name = localStorage.getItem("name") || "Customer";
     const firstName = name?.split(" ")[0];
 
     return (
         <div className="navbar">
-            <Link to="/" className="nav-brand">
-                FoodHub
-            </Link>
+            <Link to="/" className="nav-brand"> FoodHub</Link>
             <div className="nav-links">
                 {/* {!isHome &&
                     <Link to="/">
                         Home
                     </Link>
                 } */}
-                {!isGuest &&
-                    <Link to="/orders">
-                        Orders
-                    </Link>
-                }
-                {!isGuest &&
-                    <Link to="/cart">
-                        Cart
-                    </Link>
-                }
+                {!isGuest && <Link to="/orders"> Orders</Link>}
+                {!isGuest && <Link to="/cart">Cart</Link>}
+
                 {isHome && cities &&
                     <select className="nav-city" onChange={handleCity} value={city}>
                         {cities.map((i) =>
@@ -89,7 +81,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
                     </select>
                 }
             </div>
-            {isHome &&<button onClick={handleLocation}>Get Location</button>}
+            {isHome && <button onClick={handleLocation}>Get Location</button>}
             <div className="nav-search">
                 <div>
                     <input placeholder="Search here..." value={searchText} onChange={(event) => setSearchText(event.target.value)} />
@@ -99,9 +91,11 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
             <div className="nav-right">
                 {!isGuest &&
                     <>
+                    <Link to="/profileCustomer"> 
                         <span className="nav-hello">
                             Hi, {firstName}
                         </span>
+                        </Link>
 
                         <button className="nav-btn outline" onClick={handleLogout}>
                             Logout

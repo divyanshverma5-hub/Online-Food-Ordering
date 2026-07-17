@@ -20,7 +20,12 @@ function RestaurantNavbar({ isHome }) {
 
     return (
         <div className="navbar">
-            <p>👤 {firstName}</p>
+            <Link to="/profileRestaurant">
+                <span className="nav-hello">
+                    👤 {firstName}
+                </span>
+            </Link>
+
 
             {!isHome && <Link to={'/homeRestaurant'}>Dashboard</Link>}
             <Link to={'/restaurantOrders'}>Orders</Link>

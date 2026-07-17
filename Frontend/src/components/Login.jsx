@@ -1,57 +1,58 @@
-import React,{useEffect,useState} from "react";
-import {toast} from "react-toastify";
-import {useNavigate,Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 import "../style/login.css";
 import Footer from "./Footer";
 import CustomerNavbar from "./CustomerNavbar";
 
 
-function Login(){
-    const[data,setData]=useState({
-        email:"",
-        password:""
+function Login() {
+    const [data, setData] = useState({
+        email: "",
+        password: ""
     });
-    const[showPassword,setShowPassword]=useState(false);
-    const navigate=useNavigate();
-    useEffect(()=>{
-        if(localStorage.getItem("login")){
+    const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (localStorage.getItem("login")) {
             toast.info("You are already logged in");
             navigate("/");
         }
-    },[]);
-   async function handleSubmit(event){
-    event.preventDefault();
-    let result=await fetch("http://localhost:3000/login",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify(data)
-    });
-    result=await result.json();
-    console.log(result);
+    }, []);
+    async function handleSubmit(event) {
+        event.preventDefault();
+        let result = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+        result = await result.json();
+        console.log(result);
 
-    if(result.success){
-        document.cookie="token="+result.token;
-        localStorage.setItem("login",data.email);
-        localStorage.setItem("id",result.id);
-        localStorage.setItem("role","customer");
-        localStorage.setItem("name",result.name);
-        window.location="/";
+        if (result.success) {
+            document.cookie = "token=" + result.token;
+            localStorage.setItem("login", data.email);
+            localStorage.setItem("id", result.id);
+            localStorage.setItem("role", "customer");
+            localStorage.setItem("name", result.name);
+            window.location = "/";
+        }
+        else {
+            toast.error("Wrong Username or Password")
+            // alert("Try after sometime!");
+        }
     }
-    else{
-        alert("Try after sometime!");
-    }
-}
-    function handleChange(event){
-        let name=event.target.name;
-        let value=event.target.value;
-        setData((prev)=>({
+    function handleChange(event) {
+        let name = event.target.name;
+        let value = event.target.value;
+        setData((prev) => ({
             ...prev,
-            [name]:value
+            [name]: value
         }));
     }
-    return(
+    return (
         <div className="login-page">
             <div className="login-main">
                 <div className="login-left">
@@ -86,7 +87,7 @@ function Login(){
                         Welcome Back
                     </h1>
                     <p className="login-sub">
-                       Login to order food 
+                        Login to order food
                     </p>
                     <form onSubmit={handleSubmit}>
                         <label>
@@ -107,14 +108,14 @@ function Login(){
                         <div className="field-label-row">
                             <label>
                                 Password
-                            </label>                            
+                            </label>
                         </div>
                         <div className="field">
                             <span className="field-icon">
                                 🔒
                             </span>
                             <input
-                                type={showPassword?"text":"password"}
+                                type={showPassword ? "text" : "password"}
                                 name="password"
                                 placeholder="Enter Password"
                                 value={data.password}
@@ -122,7 +123,7 @@ function Login(){
                             />
                             <span
                                 className="field-icon field-icon--right"
-                                onClick={()=>setShowPassword(!showPassword)}
+                                onClick={() => setShowPassword(!showPassword)}
                             >
                                 👁
                             </span>
@@ -138,7 +139,7 @@ function Login(){
                                 Google
                             </button>
                             <button type="button" className="oauth-btn">
-                                  Apple
+                                 Apple
                             </button>
                         </div>
                         <div className="switch-line"> New Here? then make an account{" "}

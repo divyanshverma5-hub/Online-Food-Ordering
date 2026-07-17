@@ -20,6 +20,9 @@ import RestaurantOrders from './components/RestaurantOrders'
 import ViewItems from './components/ViewItems'
 import CustomerNavbar from './components/CustomerNavbar'
 import RestaurantNavbar from './components/RestaurantNavbar'
+import ProfileCustomer from './components/ProfileCustomer'
+import ProfileRestaurant from './components/ProfileRestaurant'
+
 
 
 function App() {
@@ -44,6 +47,8 @@ function App() {
       <Route path='/viewItems' element={<ViewItems/>}/>
       <Route path='/customerNavbar' element={<CustomerNavbar/>}/>
       <Route path='/restaurantNavbar' element={<RestaurantNavbar/>}/>
+      <Route path='/profileCustomer' element={<ProfileCustomer/>}/>
+      <Route path='/profileRestaurant' element={<ProfileRestaurant/>}/>
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)

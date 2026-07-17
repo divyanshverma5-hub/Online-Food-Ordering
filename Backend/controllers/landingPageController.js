@@ -42,3 +42,52 @@ export async function searchController(req, res) {
         restaurants: result.rows
     })
 }
+
+export async function customerProfile(req, res) {
+    const { customer_id } = req.query;
+    const data = await pool.query("SELECT * FROM users WHERE id = ($1)", [customer_id]);
+
+    res.json({
+        success: true,
+        data: data.rows
+    })
+}
+
+export async function EDITcustomerProfile(req, res) {
+    const { name, phone, id } = req.body
+    console.log(name)
+    console.log(phone)
+
+    await pool.query("UPDATE users SET name = $1, phone = $2 WHERE id =$3", [name, phone, id])
+    console.log("Done")
+
+    res.json({
+        success: true,
+        msg: "Changed Successfully"
+    })
+}
+
+export async function restaurantProfile(req, res) {
+    const { restaurant_id } = req.query;
+    const data = await pool.query("SELECT * FROM restaurantUsers WHERE id = ($1)", [restaurant_id]);
+
+    res.json({
+        success: true,
+        data: data.rows
+    })
+}
+
+export async function EDITrestaurantProfile(req, res) {
+    const { owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id } = req.body
+
+    await pool.query(
+        "UPDATE restaurantUsers SET owner_name = $1, restaurant_name = $2,phone = $3, city = $4, location = $5, open_time = $6, close_time = $7, img_url = $8 WHERE id =$9",
+        [owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id]
+    );
+    console.log("Done")
+
+    res.json({
+        success: true,
+        msg: "Changed Successfully"
+    })
+}
