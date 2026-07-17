@@ -54,10 +54,7 @@ export default function Home() {
         toast.success("Successfully logged Out")
         navigate("/")
     }
-    // console.log(data)
-    // function guest(){
-    //     if (localStorage.)
-    // }
+    
     return (
         <>
             
