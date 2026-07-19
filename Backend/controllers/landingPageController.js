@@ -1,4 +1,6 @@
+import cloudinary from "../config/cloudinary.js";
 import pool from "../config/db.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 export async function cityController(req, res) {
     const { city } = req.params;
@@ -78,11 +80,28 @@ export async function restaurantProfile(req, res) {
 }
 
 export async function EDITrestaurantProfile(req, res) {
-    const { owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id } = req.body
+    const { owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id, cloudinary_public_id } = req.body
+
+    let imageUrl = img_url;
+    let publicId = cloudinary_public_id;
+
+    if (req.file) {
+        const image = await uploadToCloudinary(req.file.buffer);
+
+        // Delete old image
+        if (cloudinary_public_id) {
+            await cloudinary.uploader.destroy(cloudinary_public_id);
+        }
+
+        imageUrl = image.secure_url;
+        publicId = image.public_id;
+    }
+    const openTime = open_time === "null" || open_time === "" ? null : open_time;
+    const closeTime = close_time === "null" || close_time === "" ? null : close_time;
 
     await pool.query(
-        "UPDATE restaurantUsers SET owner_name = $1, restaurant_name = $2,phone = $3, city = $4, location = $5, open_time = $6, close_time = $7, img_url = $8 WHERE id =$9",
-        [owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id]
+        "UPDATE restaurantUsers SET owner_name = $1, restaurant_name = $2,phone = $3, city = $4, location = $5, open_time = $6, close_time = $7, img_url = $8, cloudinary_public_id= $9 WHERE id =$10",
+        [owner_name, restaurant_name, phone, city, location, openTime, closeTime, imageUrl, publicId, id]
     );
     console.log("Done")
 

@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const saltRounds = Number(process.env.SALTROUNDS);
 
@@ -174,10 +175,13 @@ export async function authRestaurantRegister(req,res) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+        //cloudinary:
+        const image = await uploadToCloudinary(req.file.buffer);
+
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city, img_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-            [owner_name, r_name, email, hashedPassword, phone, location, city, img_url]
+            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city, img_url, cloudinary_public_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+            [owner_name, r_name, email, hashedPassword, phone, location, city, image.secure_url, image.public_id]
         );
 
         const user = result.rows[0];

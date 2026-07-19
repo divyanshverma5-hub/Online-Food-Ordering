@@ -1,8 +1,10 @@
+import cloudinary from "../config/cloudinary.js";
 import pool from "../config/db.js"
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
-export async function homeRestaurant(req, res){
-    
-    const {id} = req.query
+export async function homeRestaurant(req, res) {
+
+    const { id } = req.query
     let profile = await pool.query("SELECT * FROM restaurantUsers WHERE id = $1", [id]);
     profile = profile.rows[0];
 
@@ -17,11 +19,14 @@ export async function homeRestaurant(req, res){
     })
 }
 
-export async function addFood(req, res){
-    let {data} = req.body;
+export async function addFood(req, res) {
 
-    await pool.query("INSERT INTO food (food_name, description, is_veg, category, price, restaurant_id, availability, img_url) VALUES ($1, $2 ,$3, $4, $5, $6, $7, $8)",
-        [data.name, data.description, data.is_veg, data.category, data.price, data.r_id, data.availability, data.img_url]);
+    const { name, description, is_veg, category, price, r_id, availability } = req.body;
+
+    const image = await uploadToCloudinary(req.file.buffer)
+
+    await pool.query("INSERT INTO food (food_name, description, is_veg, category, price, restaurant_id, availability, img_url, cloudinary_public_id) VALUES ($1, $2 ,$3, $4, $5, $6, $7, $8, $9)",
+        [name, description, is_veg, category, price, r_id, availability, image.secure_url, image.public_id]);
 
     res.json({
         success: true,
@@ -29,26 +34,46 @@ export async function addFood(req, res){
     })
 }
 
-export async function deleteItem(req, res){
-    const {id_item} = req.params;
+export async function deleteItem(req, res) {
+    const { id_item } = req.params;
 
     // console.log(id_item);
     await pool.query("DELETE FROM food WHERE id = $1", [id_item]);
-    
+
     res.json({
         success: true,
         msg: "Item deleted successfully",
     })
 }
 
-export async function editItem(req, res){
-    const {data} = req.body;
+export async function editItem(req, res) {
 
-    await pool.query("UPDATE food SET (food_name, description, is_veg, category, price, restaurant_id, availability, img_url) = ($1, $2, $3, $4, $5, $6, $7, $8) WHERE id = $9",
-        [data.food_name, data.description, data.is_veg, data.category, data.price, data.restaurant_id, data.availability, data.img_url, data.id])
+    const { category, availability, description, food_name, is_veg, price, id, restaurant_id, cloudinary_public_id, img_url } = req.body;
+
+    let imageUrl = img_url;
+    let publicId = cloudinary_public_id;
+
+    if (req.file) {
+        const image = await uploadToCloudinary(req.file.buffer);
+
+        // Delete old image
+        if (cloudinary_public_id) {
+            await cloudinary.uploader.destroy(cloudinary_public_id);
+        }
+
+        imageUrl = image.secure_url;
+        publicId = image.public_id;
+    }
+
+    await pool.query(
+        `UPDATE food
+         SET food_name = $1, description = $2, is_veg = $3, category = $4, price = $5, restaurant_id = $6, availability = $7, img_url = $8, cloudinary_public_id = $9 WHERE id = $10`,
+        [food_name, description, is_veg, category, price, restaurant_id, availability, imageUrl, publicId, id]
+    );
 
     res.json({
         success: true,
         msg: "Edited Successfully"
-    })
+    });
+
 }

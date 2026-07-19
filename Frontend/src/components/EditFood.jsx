@@ -28,6 +28,7 @@ function EditFood({ food, close }) {
     ]
 
     const [data, setData] = useState(food);
+    const [image, setImage] = useState(null);
 
     const navigate = useNavigate();
     function handleChange(e) {
@@ -50,12 +51,24 @@ function EditFood({ food, close }) {
     }
 
     async function handleSave() {
-        // console.log(data)
+
+        const formData = new FormData();
+        formData.append("category", data.category);
+        formData.append("availability", data.availability);
+        formData.append("description", data.description);
+        formData.append("food_name", data.food_name);
+        formData.append("is_veg", data.is_veg);
+        formData.append("price", data.price);
+        formData.append("image", image);
+        formData.append("id", data.id);
+        formData.append("restaurant_id", data.restaurant_id);
+        formData.append("cloudinary_public_id", data.cloudinary_public_id);
+        formData.append("img_url", data.img_url);
+
         let result = await fetch(`http://localhost:3000/homeRestaurant/edit`, {
             method: "PATCH",
             credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ data })
+            body: formData
         });
         window.location = "/homeRestaurant"
     }
@@ -92,7 +105,8 @@ function EditFood({ food, close }) {
                 {/* <input placeholder="Enter category" type="text" value={data.category} onChange={handleChange} name="category" /> */}
 
                 <h3>Image: </h3>
-                <input placeholder="Enter image URL" type="text" value={data.img_url} onChange={handleChange} name="img_url" />
+                <input type="file" onChange={(e)=>setImage(e.target.files[0])}/>
+                {/* <input placeholder="Enter image URL" type="text" value={data.img_url} onChange={handleChange} name="img_url" /> */}
 
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <input type="checkbox" name="availability" checked={data.availability} onClick={handleChoice} />

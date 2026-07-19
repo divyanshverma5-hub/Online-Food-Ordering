@@ -6,9 +6,11 @@ import RestaurantNavbar from "./RestaurantNavbar";
 function ProfileRestaurant() {
     const navigate = useNavigate()
 
+    //useState:
     const [data, setData] = useState([])
     const [edit, setEdit] = useState(false)
     const [changeData, setChangeData] = useState(data)
+    const [image, setImage] = useState(null)
 
     useEffect(() => {
         let getData = async () => {
@@ -20,11 +22,28 @@ function ProfileRestaurant() {
         getData()
     }, [])
 
+    console.log(changeData)
+
     async function handleSubmit() {
+
+        const formData = new FormData();
+        formData.append("owner_name", changeData.owner_name)
+        formData.append("email", changeData.email)
+        formData.append("phone", changeData.phone)
+        formData.append("restaurant_name", changeData.restaurant_name)
+        formData.append("city", changeData.city)
+        formData.append("location", changeData.location)
+        formData.append("open_time", changeData.open_time)
+        formData.append("close_time", changeData.close_time)
+        formData.append("id", changeData.id)
+        formData.append("img_url", changeData.img_url)
+        formData.append("cloudinary_public_id", changeData.cloudinary_public_id)
+        formData.append("image", image)
+
+
         let result = await fetch("http://localhost:3000/editRestaurantProfile", {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(changeData)
+            body: formData
         })
         result = await result.json();
         if (result.success) {
@@ -46,7 +65,7 @@ function ProfileRestaurant() {
 
     return (
         <>
-            <RestaurantNavbar/>
+            <RestaurantNavbar />
             <h1>Restaurant Profile</h1>
             {!edit && <>
                 <h3>Owner Name: {data.owner_name}</h3>
@@ -84,8 +103,9 @@ function ProfileRestaurant() {
                 <h3>Closing Time:</h3>
                 <input value={changeData.close_time} onChange={(e) => handleChange(e)} name="close_time" type="time" autoComplete="off" />
 
-                <h3>Restaurant Image (URL):</h3>
-                <input value={changeData.img_url} onChange={(e) => handleChange(e)} name="img_url" type="text" autoComplete="off" />
+                <h3>Restaurant Image :</h3>
+                <input type="file" onChange={(e) => setImage(e.target.files[0])} name="image"/>
+                {/* <input value={changeData.img_url} onChange={(e) => handleChange(e)} name="img_url" type="text" autoComplete="off" /> */}
 
 
                 <button onClick={() => { setEdit(false), setChangeData(data) }}>Cancel</button>
