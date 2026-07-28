@@ -2,7 +2,7 @@ import React,{useEffect,useState} from "react";
 import {Link} from "react-router-dom";
 import {toast} from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
-import "../style/confirmation.css";
+import "../style/orderconfirmation.css";
 
 function Confirmation(){
 
