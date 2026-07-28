@@ -79,7 +79,7 @@ function HomeRestaurant() {
                             <h3>₹{i.price}</h3>
 
                             <div>
-                                <button onClick={handleDelete} id={i.id}>Delete</button>
+                                <button onClick={handleDelete} id={i.id}>Unavailable</button>
                                 {/* <button onClick={handleEdit} id={i.id}>Edit</button> */}
                                 <button onClick={() => handleEdit(i)}>Edit</button>
                             </div>

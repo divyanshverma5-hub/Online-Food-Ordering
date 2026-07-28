@@ -62,7 +62,9 @@ function AddFood() {
             formData.append("r_id", data.r_id)
             formData.append("is_veg", data.is_veg)
             formData.append("availability", data.availability)
-            formData.append("foodImage", image)
+            if (image){
+                formData.append("foodImage", image)
+            }
 
             let result = await fetch("http://localhost:3000/addFood", {
                 method: "POST",

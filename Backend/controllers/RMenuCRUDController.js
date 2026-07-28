@@ -23,10 +23,17 @@ export async function addFood(req, res) {
 
     const { name, description, is_veg, category, price, r_id, availability } = req.body;
 
-    const image = await uploadToCloudinary(req.file.buffer)
+    let imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL2a8mpGPRqqiVGmjV-XuhpdE5n3duNtapPiz6jeR_mQwzqWQWHTCham0&s=10";
+    let publicId = null;
+
+    if (req.file) {
+        const image = await uploadToCloudinary(req.file.buffer);
+        imageUrl = image.secure_url;
+        publicId = image.public_id;
+    }
 
     await pool.query("INSERT INTO food (food_name, description, is_veg, category, price, restaurant_id, availability, img_url, cloudinary_public_id) VALUES ($1, $2 ,$3, $4, $5, $6, $7, $8, $9)",
-        [name, description, is_veg, category, price, r_id, availability, image.secure_url, image.public_id]);
+        [name, description, is_veg, category, price, r_id, availability, imageUrl, publicId]);
 
     res.json({
         success: true,
