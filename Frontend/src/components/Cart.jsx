@@ -52,7 +52,7 @@ function Cart(){
                 contact:customerDetail.phone
             },
             theme:{
-                color:"#c2571a"
+                color:"#06C167"
             }
         }
         const razor=new Razorpay(options)

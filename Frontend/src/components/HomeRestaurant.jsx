@@ -1,7 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../style/HomeRestaurant.css";
+// import "../style/HomeRestaurant.css";
+import "../style/HomeRestaurant.css"
 import EditFood from "./EditFood";
 import { toast } from "react-toastify";
 import RestaurantNavbar from "./RestaurantNavbar";
