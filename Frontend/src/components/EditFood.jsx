@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import "../style/registeration.css";
 import { useNavigate } from "react-router-dom";
 
+import "../style/editfood.css";
+
 function EditFood({ food, close }) {
+
+    const navigate = useNavigate();
 
     const categories = [
         "Pizza",
@@ -25,96 +28,190 @@ function EditFood({ food, close }) {
         "Healthy Food",
         "Coffee",
         "Juices"
-    ]
+    ];
 
     const [data, setData] = useState(food);
     const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState(food.img_url || null);
 
-    const navigate = useNavigate();
-    function handleChange(e) {
-        const { name, value } = e.target;
+    function handleChange(event) {
+        const { name, value } = event.target;
 
-        setData(prev => ({
+        setData((prev) => ({
             ...prev,
             [name]: value
         }));
     }
 
     function handleChoice(event) {
-        const name = event.target.name;
-        const checked = event.target.checked;
+        const { name, checked } = event.target;
 
         setData((prev) => ({
             ...prev,
             [name]: checked
-        }))
+        }));
+    }
+
+    function handleImagePick(event) {
+        const file = event.target.files[0];
+
+        setImage(file);
+        setPreview(file ? URL.createObjectURL(file) : data.img_url);
     }
 
     async function handleSave() {
 
         const formData = new FormData();
+
+        formData.append("id", data.id);
+        formData.append("food_name", data.food_name);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("is_veg", data.is_veg);
         formData.append("category", data.category);
         formData.append("availability", data.availability);
-        formData.append("description", data.description);
-        formData.append("food_name", data.food_name);
-        formData.append("is_veg", data.is_veg);
-        formData.append("price", data.price);
-        formData.append("image", image);
-        formData.append("id", data.id);
         formData.append("restaurant_id", data.restaurant_id);
-        formData.append("cloudinary_public_id", data.cloudinary_public_id);
         formData.append("img_url", data.img_url);
+        formData.append("cloudinary_public_id", data.cloudinary_public_id);
 
-        let result = await fetch(`http://localhost:3000/homeRestaurant/edit`, {
+        if (image) {
+            formData.append("image", image);
+        }
+
+        await fetch("http://localhost:3000/homeRestaurant/edit", {
             method: "PATCH",
             credentials: "include",
             body: formData
         });
-        window.location = "/homeRestaurant"
+
+        window.location = "/homeRestaurant";
     }
 
     return (
-        <div className="overlay">
+        <div className="ef-overlay">
 
-            <div className="popup">
+            <div className="ef-modal">
+
                 <h1>Edit Food</h1>
 
-                <h3>Name</h3>
-                <input name="food_name" value={data.food_name} onChange={handleChange} />
+                <label>Name</label>
 
-                <h3>Description</h3>
-                <textarea rows={4} name="description" value={data.description} onChange={handleChange} />
-
-                <h3>Price</h3>
-                <input type="number" name="price" value={data.price} onChange={handleChange} />
-
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <input type="checkbox" name="is_veg" checked={data.is_veg} onClick={handleChoice} />
-                    <h3>Is Veg</h3>
+                <div className="ef-field">
+                    <input
+                        name="food_name"
+                        value={data.food_name}
+                        onChange={handleChange}
+                    />
                 </div>
 
-                <h3>Category: </h3>
-                <select onChange={handleChange} name="category">
-                    {categories.map((i) => {
-                        return (
-                            <option value={i}>{i}</option>
-                        )
-                    })}
-                </select>                
+                <label>Description</label>
 
-                {/* <input placeholder="Enter category" type="text" value={data.category} onChange={handleChange} name="category" /> */}
-
-                <h3>Image: </h3>
-                <input type="file" onChange={(e)=>setImage(e.target.files[0])}/>
-                {/* <input placeholder="Enter image URL" type="text" value={data.img_url} onChange={handleChange} name="img_url" /> */}
-
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <input type="checkbox" name="availability" checked={data.availability} onClick={handleChoice} />
-                    <h3>Is Available</h3>
+                <div className="ef-field">
+                    <textarea
+                        rows={4}
+                        name="description"
+                        value={data.description}
+                        onChange={handleChange}
+                    />
                 </div>
 
-                <button onClick={handleSave}>Save</button>
-                <button onClick={close}>Cancel</button>
+                <label>Price</label>
+
+                <div className="ef-field">
+                    <input
+                        type="number"
+                        name="price"
+                        value={data.price}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div className="ef-checkbox-row">
+                    <input
+                        type="checkbox"
+                        name="is_veg"
+                        checked={data.is_veg}
+                        onClick={handleChoice}
+                    />
+                    <label>Is Veg</label>
+                </div>
+
+                <label>Category</label>
+
+                <div className="ef-field">
+                    <select
+                        name="category"
+                        value={data.category}
+                        onChange={handleChange}
+                    >
+                        {categories.map((category) => (
+                            <option
+                                key={category}
+                                value={category}
+                            >
+                                {category}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <label>Image</label>
+
+                <div className="upload-box">
+                    {preview ? (
+                        <img
+                            src={preview}
+                            alt="preview"
+                            className="upload-preview"
+                        />
+                    ) : (
+                        <span className="upload-placeholder">
+                            🖼
+                        </span>
+                    )}
+
+                    <label
+                        htmlFor="editFoodImageInput"
+                        className="upload-btn"
+                    >
+                        📷 Change Image
+                    </label>
+
+                    <input
+                        id="editFoodImageInput"
+                        className="upload-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImagePick}
+                    />
+                </div>
+
+                <div className="ef-checkbox-row">
+                    <input
+                        type="checkbox"
+                        name="availability"
+                        checked={data.availability}
+                        onClick={handleChoice}
+                    />
+                    <label>Is Available</label>
+                </div>
+
+                <div className="ef-actions">
+                    <button
+                        className="ef-btn-cancel"
+                        onClick={close}
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        className="ef-btn-save"
+                        onClick={handleSave}
+                    >
+                        Save
+                    </button>
+                </div>
+
             </div>
 
         </div>

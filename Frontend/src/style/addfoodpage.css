@@ -1,0 +1,234 @@
+.af-page{
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1a1a1a;
+    background: #fff;
+}
+
+.af-wrap{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 48px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.af-logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.af-logo__icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+}
+
+.af-logo span{
+    font-size: 24px;
+    font-weight: 800;
+    color: #16a34a;
+}
+
+.af-page h1{
+    font-size: 34px;
+    font-weight: 800;
+    color: #1f3d1f;
+    margin: 0 0 10px;
+    text-align: center;
+}
+
+.af-sub{
+    color: #555;
+    font-size: 16px;
+    text-align: center;
+    max-width: 420px;
+    margin: 0 0 32px;
+    line-height: 1.5;
+}
+
+.af-card{
+    width: 100%;
+    background: #fff;
+    border: 1px solid #c9f2b0;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    padding: 36px;
+    box-sizing: border-box;
+}
+
+.af-card label{
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.af-card .af-field{
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.af-card .af-field input{
+    width: 100%;
+    background: #ddf7c4;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 44px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    margin: 0;
+}
+
+.af-card .af-field input::placeholder{
+    color: #7a8a6f;
+}
+
+.af-card .af-field-icon{
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3f5c33;
+    font-size: 15px;
+}
+
+.af-card .af-field--phone{
+    display: flex;
+    align-items: center;
+    background: #ddf7c4;
+    border-radius: 12px;
+    padding: 0 16px;
+}
+
+.af-card .af-field--phone .phone-prefix{
+    color: #333;
+    font-size: 15px;
+    padding-right: 14px;
+    border-right: 1px solid #b9dd9e;
+}
+
+.af-card .af-field--phone input{
+    background: transparent;
+    padding: 16px 0 16px 14px;
+}
+
+.af-card .af-field--textarea textarea{
+    width: 100%;
+    background: #ddf7c4;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.af-card .af-field--textarea textarea::placeholder{
+    color: #7a8a6f;
+}
+
+.af-card .af-field--select select{
+    width: 100%;
+    background: #ddf7c4;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    appearance: none;
+}
+
+.af-card .af-btnSubmit{
+    width: 100%;
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.95rem;
+    margin-top: 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.af-card .af-btnSubmit:hover{
+    background: #15803d;
+}
+
+.af-checkbox-row{
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin: -8px 0 22px;
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: #444;
+}
+
+.af-checkbox-row input{
+    width: auto;
+}
+
+.af-upload-box{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.af-upload-placeholder{
+    width: 56px;
+    height: 56px;
+    background: #ddf7c4;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.af-upload-preview{
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.af-upload-input{
+    display: none;
+}
+
+.af-upload-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #16a34a;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.af-upload-btn:hover{
+    background: #15803d;
+}

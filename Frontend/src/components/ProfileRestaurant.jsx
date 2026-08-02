@@ -1,120 +1,347 @@
 import React, { useEffect, useState } from "react";
-import CustomerNavbar from "./CustomerNavbar";
-import { useNavigate } from "react-router-dom";
 import RestaurantNavbar from "./RestaurantNavbar";
 
-function ProfileRestaurant() {
-    const navigate = useNavigate()
+import "../style/profile.css";
 
-    //useState:
-    const [data, setData] = useState([])
-    const [edit, setEdit] = useState(false)
-    const [changeData, setChangeData] = useState(data)
-    const [image, setImage] = useState(null)
+function ProfileRestaurant() {
+    const [data, setData] = useState([]);
+    const [edit, setEdit] = useState(false);
+    const [changeData, setChangeData] = useState(data);
+
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState(null);
 
     useEffect(() => {
-        let getData = async () => {
-            let result = await fetch(`http://localhost:3000/profileRestaurant?restaurant_id=${localStorage.getItem("id")}`)
-            result = await result.json();
-            setData(result.data[0])
-            setChangeData(result.data[0])
-        }
-        getData()
-    }, [])
+        const getData = async () => {
+            let result = await fetch(
+                `http://localhost:3000/profileRestaurant?restaurant_id=${localStorage.getItem("id")}`
+            );
 
-    console.log(changeData)
+            result = await result.json();
+
+            setData(result.data[0]);
+            setChangeData(result.data[0]);
+            setPreview(result.data[0]?.img_url || null);
+        };
+
+        getData();
+    }, []);
+
+    function handleImagePick(event) {
+        const file = event.target.files[0];
+
+        setImage(file);
+        setPreview(
+            file
+                ? URL.createObjectURL(file)
+                : changeData.img_url
+        );
+    }
 
     async function handleSubmit() {
-
         const formData = new FormData();
-        formData.append("owner_name", changeData.owner_name)
-        formData.append("email", changeData.email)
-        formData.append("phone", changeData.phone)
-        formData.append("restaurant_name", changeData.restaurant_name)
-        formData.append("city", changeData.city)
-        formData.append("location", changeData.location)
-        formData.append("open_time", changeData.open_time)
-        formData.append("close_time", changeData.close_time)
-        formData.append("id", changeData.id)
-        formData.append("img_url", changeData.img_url)
-        formData.append("cloudinary_public_id", changeData.cloudinary_public_id)
-        formData.append("image", image)
 
+        formData.append("owner_name", changeData.owner_name);
+        formData.append("email", changeData.email);
+        formData.append("phone", changeData.phone);
+        formData.append("restaurant_name", changeData.restaurant_name);
+        formData.append("city", changeData.city);
+        formData.append("location", changeData.location);
+        formData.append("open_time", changeData.open_time);
+        formData.append("close_time", changeData.close_time);
+        formData.append("id", changeData.id);
+        formData.append("img_url", changeData.img_url);
+        formData.append("cloudinary_public_id", changeData.cloudinary_public_id);
+        formData.append("image", image);
 
-        let result = await fetch("http://localhost:3000/editRestaurantProfile", {
-            method: "PATCH",
-            body: formData
-        })
+        let result = await fetch(
+            "http://localhost:3000/editRestaurantProfile",
+            {
+                method: "PATCH",
+                body: formData
+            }
+        );
+
         result = await result.json();
+
         if (result.success) {
-            setData(changeData)
-            setEdit(false)
-            localStorage.setItem("name", changeData.owner_name)
+            setData(changeData);
+            setEdit(false);
+            localStorage.setItem("name", changeData.owner_name);
         }
     }
 
     function handleChange(event) {
-        let name = event.target.name
-        let value = event.target.value
+        const name = event.target.name;
+        const value = event.target.value;
 
         setChangeData((prev) => ({
             ...prev,
             [name]: value
-        }))
+        }));
     }
+
+    const initial = data.restaurant_name
+        ? data.restaurant_name.trim().charAt(0).toUpperCase()
+        : "?";
 
     return (
         <>
             <RestaurantNavbar />
-            <h1>Restaurant Profile</h1>
-            {!edit && <>
-                <h3>Owner Name: {data.owner_name}</h3>
-                <h3>Restaurant Name: {data.restaurant_name}</h3>
-                <h3>Email: {data.email}</h3>
-                <h3>Phone: {data.phone}</h3>
-                <h3>City: {data.city}</h3>
-                <h3>Complete Address: {data.location}</h3>
-                <h3>Open Time: {data.open_time}</h3>
-                <h3>Close Time: {data.close_time}</h3>
-                <h3>Restaurant Image: {data.img_url}</h3>
 
-                <button onClick={() => setEdit(true)}>Edit</button>
-            </>}
+            <div className="pf-page">
+                <h1>Restaurant Profile</h1>
 
-            {edit && <>
-                <h3>Restaurant Name:</h3>
-                <input value={changeData.restaurant_name} onChange={(e) => handleChange(e)} name="restaurant_name" type="text" autoComplete="off" />
+                <div className="pf-header-card">
+                    <div className="pf-avatar">
+                        {data.img_url ? (
+                            <img
+                                src={data.img_url}
+                                alt={data.restaurant_name}
+                            />
+                        ) : (
+                            initial
+                        )}
+                    </div>
 
-                <h3>Owner Name:</h3>
-                <input value={changeData.owner_name} onChange={(e) => handleChange(e)} name="owner_name" type="text" autoComplete="off" />
+                    <div className="pf-header-info">
+                        <h2>{data.restaurant_name}</h2>
 
-                <h3>Phone:</h3>
-                <input value={changeData.phone} onChange={(e) => handleChange(e)} name="phone" type="number" />
+                        <p className="pf-contact-row">
+                            👤 Owner: {data.owner_name}
+                        </p>
 
-                <h3>City:</h3>
-                <input value={changeData.city} onChange={(e) => handleChange(e)} name="city" type="text" autoComplete="off" />
+                        <p className="pf-contact-row">
+                            ✉️ {data.email}
+                        </p>
 
-                <h3>Complete Address:</h3>
-                <textarea value={changeData.location} onChange={(e) => handleChange(e)} name="location" type="text" autoComplete="off" rows={4} />
+                        <p className="pf-contact-row">
+                            📞 {data.phone}
+                        </p>
 
-                <h3>Opening Time:</h3>
-                <input value={changeData.open_time} onChange={(e) => handleChange(e)} name="open_time" type="time" autoComplete="off" />
+                        {!edit && (
+                            <div className="pf-header-actions">
+                                <button
+                                    className="pf-btn-primary"
+                                    onClick={() => setEdit(true)}
+                                >
+                                    Edit Profile
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
 
-                <h3>Closing Time:</h3>
-                <input value={changeData.close_time} onChange={(e) => handleChange(e)} name="close_time" type="time" autoComplete="off" />
+                {!edit && (
+                    <div className="pf-details-card">
+                        <h3>Restaurant Details</h3>
 
-                <h3>Restaurant Image :</h3>
-                <input type="file" onChange={(e) => setImage(e.target.files[0])} name="image"/>
-                {/* <input value={changeData.img_url} onChange={(e) => handleChange(e)} name="img_url" type="text" autoComplete="off" /> */}
+                        <div className="pf-detail-row">
+                            <span className="pf-detail-icon">
+                                📍
+                            </span>
 
+                            <div>
+                                <p className="pf-detail-label">
+                                    City
+                                </p>
 
-                <button onClick={() => { setEdit(false), setChangeData(data) }}>Cancel</button>
-                <button onClick={handleSubmit}>Save</button>
-            </>}
+                                <p className="pf-detail-value">
+                                    {data.city}
+                                </p>
+                            </div>
+                        </div>
 
+                        <div className="pf-detail-row">
+                            <span className="pf-detail-icon">
+                                🏠
+                            </span>
 
+                            <div>
+                                <p className="pf-detail-label">
+                                    Complete Address
+                                </p>
+
+                                <p className="pf-detail-value">
+                                    {data.location}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="pf-detail-row">
+                            <span className="pf-detail-icon">
+                                🕒
+                            </span>
+
+                            <div>
+                                <p className="pf-detail-label">
+                                    Timings
+                                </p>
+
+                                <p className="pf-detail-value">
+                                    {data.open_time} - {data.close_time}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {edit && (
+                    <div className="pf-edit-card">
+                        <h3>Edit Restaurant Profile</h3>
+
+                        <div className="upload-box">
+                            {preview ? (
+                                <img
+                                    src={preview}
+                                    alt="preview"
+                                    className="upload-preview"
+                                />
+                            ) : (
+                                <span className="upload-placeholder">
+                                    🖼
+                                </span>
+                            )}
+
+                            <label
+                                className="upload-btn"
+                                htmlFor="restaurantImageInput"
+                            >
+                                📷 Change Image
+                            </label>
+
+                            <input
+                                id="restaurantImageInput"
+                                className="upload-input"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImagePick}
+                            />
+                        </div>
+
+                        <div className="pf-form-grid">
+                            <div className="pf-field">
+                                <label>
+                                    Restaurant Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="restaurant_name"
+                                    autoComplete="off"
+                                    value={changeData.restaurant_name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field">
+                                <label>
+                                    Owner Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="owner_name"
+                                    autoComplete="off"
+                                    value={changeData.owner_name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field">
+                                <label>
+                                    Phone
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="phone"
+                                    value={changeData.phone}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field">
+                                <label>
+                                    City
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="city"
+                                    autoComplete="off"
+                                    value={changeData.city}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field pf-span-2">
+                                <label>
+                                    Complete Address
+                                </label>
+
+                                <textarea
+                                    rows={3}
+                                    name="location"
+                                    autoComplete="off"
+                                    value={changeData.location}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field">
+                                <label>
+                                    Opening Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="open_time"
+                                    autoComplete="off"
+                                    value={changeData.open_time}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="pf-field">
+                                <label>
+                                    Closing Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="close_time"
+                                    autoComplete="off"
+                                    value={changeData.close_time}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="pf-edit-actions">
+                            <button
+                                className="pf-btn-secondary"
+                                onClick={() => {
+                                    setEdit(false);
+                                    setChangeData(data);
+                                    setPreview(data.img_url);
+                                }}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                className="pf-btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </>
-    )
+    );
 }
 
-export default ProfileRestaurant
+export default ProfileRestaurant;
