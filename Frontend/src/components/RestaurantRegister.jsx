@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import "../style/registeration.css";
 import Footer from "./Footer";
+
 function RestaurantRegister() {
     const [data, setData] = useState({
         owner_name: "",
@@ -12,10 +13,16 @@ function RestaurantRegister() {
         phone: "",
         location: "",
         city: "",
-        img_url: "https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg"
+        // img_url: "https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg"
     });
+
+    //useState
     const [showPassword, setShowPassword] = useState(false);
+    const [image, setImage] = useState(null)
+
     const navigate = useNavigate();
+
+
     useEffect(() => {
         if (localStorage.getItem("role") == "restaurant") {
             toast.info("You are already logged in");
@@ -24,12 +31,21 @@ function RestaurantRegister() {
     });
     async function handleSubmit(event) {
         event.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append(`owner_name`,data.owner_name)
+        formData.append(`r_name`,data.r_name)
+        formData.append(`email`,data.email)
+        formData.append(`password`,data.password)
+        formData.append(`phone`,data.phone)
+        formData.append(`location`,data.location)
+        formData.append(`city`,data.city)
+        formData.append(`image`,image)
+
         let result = await fetch("http://localhost:3000/restaurantRegister", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: formData
         });
         result = await result.json();
         if (result.success) {
@@ -52,6 +68,7 @@ function RestaurantRegister() {
             [name1]: value
         }));
     }
+
     return (
         <div className="signup-page">
             <div className="signup-wrap">
@@ -148,16 +165,11 @@ function RestaurantRegister() {
                                 name="city"
                             />
                         </div>
-                        <label>Restaurant Image URL(If you have one please replace the link below)</label>
+                        <label>Restaurant Image (Optional)</label>
                         <div className="field">
-                            <span className="field-icon"></span>
-                            <input
-                                placeholder="Image URL"
-                                type="text"
-                                value={data.img_url}
-                                onChange={handleChange}
-                                name="img_url"
-                            />
+                            {/* <span className="field-icon"></span> */}
+                            <input type="file" onChange={(e)=>setImage(e.target.files[0])} name="image"/>
+                            
                         </div>
                         <button
                             type="submit"

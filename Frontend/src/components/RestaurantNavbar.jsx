@@ -23,7 +23,9 @@ function RestaurantNavbar({ isHome }) {
                 <Link to={'/addFood'}>Add Food</Link>
             </div>
             <div className="nav-right">
-                <span className="nav-hello">👤 {firstName}</span>
+                <Link to="/ProfileRestaurant">
+                    <span className="nav-hello">👤 {firstName}</span>
+                </Link>
                 <button className="nav-btn solid" onClick={handleLogout}>Logout</button>
             </div>
         </div>

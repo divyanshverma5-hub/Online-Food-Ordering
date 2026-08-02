@@ -52,8 +52,7 @@ function App() {
     </Routes>
 
     {/* (If anybody reading, ignore it, its for me)
-        // route protection
-        //default in payment page
+        // Make unavailable instead of delete!
         //if order rejected then 
     */}
     

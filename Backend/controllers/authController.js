@@ -1,10 +1,11 @@
 import pool from "../config/db.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const saltRounds = Number(process.env.SALTROUNDS);
 
-export async function authRegister(req,res) {
+export async function authRegister(req, res) {
     try {
         const { name, email, password, phone } = req.body;
 
@@ -75,7 +76,7 @@ export async function authRegister(req,res) {
     }
 }
 
-export async function authLogin(req,res) {
+export async function authLogin(req, res) {
     try {
         const { email, password } = req.body;
 
@@ -147,9 +148,9 @@ export async function authLogin(req,res) {
     }
 }
 
-export async function authRestaurantRegister(req,res) {
+export async function authRestaurantRegister(req, res) {
     try {
-        const { owner_name,r_name, email, password , phone, location, city, img_url} = req.body;
+        const { owner_name, r_name, email, password, phone, location, city, img_url } = req.body;
 
         if (!email || !password || !city) {
             return res.json({
@@ -174,10 +175,21 @@ export async function authRestaurantRegister(req,res) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+        //cloudinary:
+        let imageUrl = "https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg";
+        let publicId = null;
+
+        if (req.file) {
+            const image = await uploadToCloudinary(req.file.buffer);
+            imageUrl = image.secure_url;
+            publicId = image.public_id;
+        }
+        // const image = await uploadToCloudinary(req.file.buffer);
+
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city, img_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-            [owner_name, r_name, email, hashedPassword, phone, location, city, img_url]
+            "INSERT INTO restaurantUsers (owner_name,restaurant_name, email, password, phone, location, city, img_url, cloudinary_public_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+            [owner_name, r_name, email, hashedPassword, phone, location, city, imageUrl, publicId]
         );
 
         const user = result.rows[0];
@@ -217,7 +229,7 @@ export async function authRestaurantRegister(req,res) {
     }
 }
 
-export async function authRestaurantLogin(req,res) {
+export async function authRestaurantLogin(req, res) {
     try {
         const { email, password } = req.body;
 
@@ -268,7 +280,7 @@ export async function authRestaurantLogin(req,res) {
                         msg: "Token generation failed",
                     });
                 }
-                
+
                 res.json({
                     success: true,
                     msg: "Login done",

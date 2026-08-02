@@ -29,6 +29,7 @@ export default function Home(){
         "Almora",
         "New Delhi",
         "Mumbai",
+        "Mathura",
         "Bengaluru",
         "Hyderabad",
         "Chennai",

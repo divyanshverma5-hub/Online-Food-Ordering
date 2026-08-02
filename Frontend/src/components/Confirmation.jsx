@@ -1,43 +1,43 @@
-import React,{useEffect,useState} from "react";
-import {Link} from "react-router-dom";
-import {toast} from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/orderconfirmation.css";
 
-function Confirmation(){
+function Confirmation() {
 
-    const[order,setOrder]=useState(null);
-    const[dishes,setDishes]=useState([]);
-    let customer_id=localStorage.getItem("id");
+    const [order, setOrder] = useState(null);
+    const [dishes, setDishes] = useState([]);
+    let customer_id = localStorage.getItem("id");
 
-    async function getOrder(){
-        let result=await fetch(`http://localhost:3000/order/details?id=${customer_id}`);
-        result=await result.json();
-        let orders=result.detail;
-        if(!orders || orders.length===0){
+    async function getOrder() {
+        let result = await fetch(`http://localhost:3000/order/details?id=${customer_id}`);
+        result = await result.json();
+        let orders = result.detail;
+        if (!orders || orders.length === 0) {
             return;
         }
-        let latest=orders.reduce((a,b)=>
-            new Date(a.order_at)>new Date(b.order_at)?a:b
+        let latest = orders.reduce((a, b) =>
+            new Date(a.order_at) > new Date(b.order_at) ? a : b
         );
         setOrder(latest);
-        let dishResult=await fetch(`http://localhost:3000/order/seeDishes?id=${latest.id}`);
-        dishResult=await dishResult.json();
+        let dishResult = await fetch(`http://localhost:3000/order/seeDishes?id=${latest.id}`);
+        dishResult = await dishResult.json();
         setDishes(dishResult.dishes || []);
     }
-    useEffect(()=>{
+    useEffect(() => {
         toast.success("Ordered Successfully");
         getOrder();
-    },[]);
-    return(
+    }, []);
+    return (
         <>
             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
             <main className="conf-main">
                 <div className="conf-hero">
-    <img className="conf-hero-img"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkoY8rEOnIwhzxn6YfsUHv5Ufs41rYJdBk75AJu9X6BmCGjW_FPE7hd9-lxs3PV8rkGFbhADT6Tf61r3zoxtb5Lfo_A6FQ-9xHvxjn-MIMtVwBUeJE8mUCt-Mi1PoDSAIUGJDB-jBy1tuKrh9nUxXi_Blo7B6L6EDFf9w_x0p9O-_PXmxlqtclmFhGr2PeaNcfKtAK0oukaZxrollZNxcX_ix2nZYro81p0WKjP1dQ9V1zpeEeKJwQ"
-        alt="Order Confirmed"/>
-</div>
+                    <img className="conf-hero-img"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkoY8rEOnIwhzxn6YfsUHv5Ufs41rYJdBk75AJu9X6BmCGjW_FPE7hd9-lxs3PV8rkGFbhADT6Tf61r3zoxtb5Lfo_A6FQ-9xHvxjn-MIMtVwBUeJE8mUCt-Mi1PoDSAIUGJDB-jBy1tuKrh9nUxXi_Blo7B6L6EDFf9w_x0p9O-_PXmxlqtclmFhGr2PeaNcfKtAK0oukaZxrollZNxcX_ix2nZYro81p0WKjP1dQ9V1zpeEeKJwQ"
+                        alt="Order Confirmed" />
+                </div>
                 <h1 className="conf-title">
                     Order placed successfully!
                 </h1>
@@ -64,7 +64,7 @@ function Confirmation(){
                         }
                     </div>
                     <div className="conf-items">
-                        {dishes.map((d,i)=>
+                        {dishes.map((d, i) =>
                             <div className="conf-item" key={i}>
                                 <div>
                                     <p className="conf-item-name">
@@ -73,7 +73,7 @@ function Confirmation(){
                                 </div>
 
                                 <span>
-                                    ₹{d.price_at_purchase*d.quantity}
+                                    ₹{d.price_at_purchase * d.quantity}
                                 </span>
                             </div>
                         )}

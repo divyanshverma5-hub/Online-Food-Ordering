@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 
-function AddFood(){
+function AddFood() {
     const navigate = useNavigate();
     let id = localStorage.getItem("id");
     const categories = [
@@ -37,33 +37,55 @@ function AddFood(){
         r_id: id,
         is_veg: true,
         availability: true,
-        img_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL2a8mpGPRqqiVGmjV-XuhpdE5n3duNtapPiz6jeR_mQwzqWQWHTCham0&s=10"
+        // img_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL2a8mpGPRqqiVGmjV-XuhpdE5n3duNtapPiz6jeR_mQwzqWQWHTCham0&s=10"
     });
-    async function handleSubmit(event){
+
+    const [image, setImage] = useState(null);
+
+
+    async function handleSubmit(event) {
         event.preventDefault();
-        if(data.name == "" || data.price == ""){
+        if (data.name == "" || data.price == "") {
             toast.error("Fill * details.");
         }
-        else{
+        else {
+
+            const formData = new FormData();
+            // LOOP instead of manually writing: 
+            // Object.entries(data).forEach(([key, value]) => {
+            //     formData.append(key, value);
+            // });
+            formData.append("name", data.name)
+            formData.append("description", data.description)
+            formData.append("price", data.price)
+            formData.append("category", data.category)
+            formData.append("r_id", data.r_id)
+            formData.append("is_veg", data.is_veg)
+            formData.append("availability", data.availability)
+            if (image){
+                formData.append("foodImage", image)
+            }
+
             let result = await fetch("http://localhost:3000/addFood", {
                 method: "POST",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ data })
+                // headers: {
+                //     "Content-Type": "application/json"
+                // },
+                // body: JSON.stringify({ data })
+                body: formData
             });
             result = await result.json();
-            if(result.success){
+            if (result.success) {
                 toast.success("Saved successfully!");
                 navigate("/homeRestaurant");
             }
-            else{
+            else {
                 toast.error("Something went wrong.");
             }
         }
     }
-    function handleChange(event){
+    function handleChange(event) {
         const name = event.target.name;
         const value = event.target.value;
         setData((prev) => ({
@@ -71,7 +93,7 @@ function AddFood(){
             [name]: value
         }));
     }
-    function handleChoice(event){
+    function handleChoice(event) {
         const name = event.target.name;
         const checked = event.target.checked;
         setData((prev) => ({
@@ -79,7 +101,7 @@ function AddFood(){
             [name]: checked
         }));
     }
-    return(
+    return (
         <div className="signup-page">
             <div className="signup-wrap">
                 <div className="signup-logo">
@@ -148,7 +170,7 @@ function AddFood(){
                             >
                                 {
                                     categories.map((i) => {
-                                        return(
+                                        return (
                                             <option
                                                 value={i}
                                                 key={i}
@@ -160,18 +182,13 @@ function AddFood(){
                                 }
                             </select>
                         </div>
-                        <label>Image URL</label>
+                        <label>Food Image</label>
                         <div className="field">
                             <span className="field-icon">
                                 🖼
                             </span>
-                            <input
-                                placeholder="Enter image URL"
-                                type="text"
-                                value={data.img_url}
-                                onChange={handleChange}
-                                name="img_url"
-                            />
+
+                            <input type="file" name="foodImage" onChange={(e) => setImage(e.target.files[0])} />
                         </div>
                         <button
                             type="submit"

@@ -6,7 +6,7 @@ import "../style/HomeRestaurant.css"
 import EditFood from "./EditFood";
 import { toast } from "react-toastify";
 import RestaurantNavbar from "./RestaurantNavbar";
-function HomeRestaurant(){
+function HomeRestaurant() {
     const [showEdit, setShowEdit] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);
     const [data, setData] = useState([]);
@@ -22,7 +22,7 @@ function HomeRestaurant(){
         }
         getData();
     }, []);
-    async function handleDelete(event){
+    async function handleDelete(event) {
         let result = await fetch(`http://localhost:3000/homeRestaurant/delete/${event.target.id}`, {
             method: "DELETE",
             credentials: "include",
@@ -33,12 +33,15 @@ function HomeRestaurant(){
             food.filter(i => i.id !== Number(event.target.id))
         );
     }
-    function handleEdit(item){
+    function handleEdit(item) {
         setSelectedFood(item);
         setShowEdit(true);
     }
-    return(
+    return (
         <>
+
+
+            {/* ======= */}
             <RestaurantNavbar isHome={true} />
             <div className="rd-header">
                 <div>
@@ -49,6 +52,7 @@ function HomeRestaurant(){
                     <div className="rd-stat-card">
                         <span className="rd-stat-value">{food.length}</span>
                         <span className="rd-stat-label">Menu Items</span>
+                        {/* >>>>>>> svj */}
                     </div>
                     <Link to="/addFood" className="rd-add-btn">
                         + Add Food
