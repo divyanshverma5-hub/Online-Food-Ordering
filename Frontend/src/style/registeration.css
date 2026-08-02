@@ -33,9 +33,9 @@ textarea{
     font-size: 1rem;
     cursor: pointer;
 }
-button:hover{
+/* button:hover{
     background-color: blue;
-}
+} */
 .overlay{
     position: fixed;
     top: 0;
