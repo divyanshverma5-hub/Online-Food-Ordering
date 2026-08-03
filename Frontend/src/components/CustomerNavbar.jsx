@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../style/customerNavbar.css";
 import ProfileCustomer from "./ProfileCustomer.jsx";
-function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchData, handleDetectedCity }){
+
+function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchData, handleDetectedCity }) {
+
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
-    function handleLogout(){
+    const [cntCart, setCntCart] = useState(0);
+
+    useEffect(() => {
+        const getCount = async () => {
+            let result = await fetch(`http://localhost:3000/cart/count?customer_id=${localStorage.getItem("id")}`);
+            result = await result.json();
+
+            setCntCart(result.cnt);
+        }
+        getCount();
+    }, [])
+
+    function handleLogout() {
         localStorage.removeItem("id");
         localStorage.removeItem("login");
         localStorage.removeItem("role");
@@ -14,7 +28,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
         toast.success("Successfully logged Out");
         navigate("/");
     }
-    async function handleLocation(){
+    async function handleLocation() {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 const latitude = position.coords.latitude;
@@ -22,11 +36,11 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
                 let result = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
                 result = await result.json();
                 const detectedCity = result.address.city || result.address.town || result.address.village;
-                if(cities.includes(detectedCity)){
+                if (cities.includes(detectedCity)) {
                     handleDetectedCity(detectedCity);
                     toast.success(`Location detected: ${detectedCity}`);
                 }
-                else{
+                else {
                     toast.info(`We currently don't serve ${detectedCity}`);
                 }
             },
@@ -36,23 +50,34 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
             }
         );
     }
-    async function SearchButton(){
-        if(searchText == ""){
+    async function SearchButton() {
+        if (searchText == "") {
             toast.warning("Please write something to search");
         }
-        else{
+        else {
             navigate(`/?search=${encodeURIComponent(searchText)}`);
         }
     }
     const name = localStorage.getItem("name") || "Customer";
     const firstName = name?.split(" ")[0];
-    return(
+    return (
         <div className="navbar">
             <Link to="/" className="nav-brand">FoodHub</Link>
             <div className="nav-links">
-                {!isGuest && <Link to="/orders">Orders</Link>}
-                {!isGuest && <Link to="/cart">Cart</Link>}
-                {isHome && cities &&
+
+                {!isGuest &&
+                    <Link to="/orders">
+                        Orders
+                    </Link>
+                }
+                {!isGuest &&
+                    <Link to="/cart">
+                        Cart {cntCart}
+                    </Link>
+                }
+
+                {
+                    isHome && cities &&
                     <div className="nav-location-group">
                         <select className="nav-city" onChange={handleCity} value={city}>
                             {cities.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -62,28 +87,28 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
                         </button>
                     </div>
                 }
-            </div>
+            </div >
             <div className="nav-search">
-    <div>
-        <span className="nav-search-icon">🔍</span>
+                <div>
+                    <span className="nav-search-icon">🔍</span>
 
-        <input
-            type="text"
-            placeholder="Search food or restaurants"
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-            onKeyDown={(event) => {
-                if(event.key === "Enter"){
-                    SearchButton();
-                }
-            }}
-        />
+                    <input
+                        type="text"
+                        placeholder="Search food or restaurants"
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                SearchButton();
+                            }
+                        }}
+                    />
 
-        <button onClick={SearchButton}>
-            Search
-        </button>
-    </div>
-</div>
+                    <button onClick={SearchButton}>
+                        Search
+                    </button>
+                </div>
+            </div>
             <div className="nav-right">
                 {!isGuest &&
                     <>
@@ -108,7 +133,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
                     </>
                 }
             </div>
-        </div>
+        </div >
     );
 }
 export default CustomerNavbar;

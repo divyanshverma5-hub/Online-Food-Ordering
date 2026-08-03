@@ -5,6 +5,8 @@ import "../style/login.css";
 import Footer from "./Footer";
 import CustomerNavbar from "./CustomerNavbar";
 
+import { GoogleLogin } from "@react-oauth/google";
+
 
 function Login() {
     const [data, setData] = useState({
@@ -40,8 +42,7 @@ function Login() {
             window.location = "/";
         }
         else {
-            toast.error("Wrong Username or Password")
-            // alert("Try after sometime!");
+            toast.error(result.msg || result.message);
         }
     }
     function handleChange(event) {
@@ -52,6 +53,43 @@ function Login() {
             [name]: value
         }));
     }
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const response = await fetch("http://localhost:3000/google", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token: credentialResponse.credential,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.cookie = "token=" + result.token;
+
+                localStorage.setItem("login", result.user.email);
+                localStorage.setItem("id", result.user.id);
+                localStorage.setItem("role", "customer");
+                localStorage.setItem("name", result.user.name);
+
+                toast.success("Login Successful");
+                window.location = "/";
+            }
+            else {
+                toast.error(result.message || result.msg);
+            }
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Google Login Failed");
+        }
+    };
+
+
     return (
         <div className="login-page">
             <div className="login-main">
@@ -135,12 +173,15 @@ function Login() {
                             or continue with
                         </div>
                         <div className="oauth-row">
-                            <button type="button" className="oauth-btn">
-                                Google
-                            </button>
-                            <button type="button" className="oauth-btn">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => {
+                                    console.log("Google Login Failed");
+                                }}
+                            />
+                            {/* <button type="button" className="oauth-btn">
                                  Apple
-                            </button>
+                            </button> */}
                         </div>
                         <div className="switch-line"> New Here? then make an account{" "}
                             <Link to="/registeration">
