@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import "../style/home.css";
 
 export default function Home(){
-
+    const [showVideo, setShowVideo] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -133,13 +133,42 @@ export default function Home(){
 
                         <button
                             className="home-howitworks"
-                            onClick={scrollToRestaurants}
+                            onClick={() => setShowVideo(true)}
                         >
-                            <span className="home-howitworks-icon">▶</span>
+                        <span className="home-howitworks-icon">▶</span>
                             How it works
                         </button>
+
+                        {showVideo && (
+    <div
+        className="video-overlay"
+        onClick={() => setShowVideo(false)}
+    >
+        <div
+            className="video-modal"
+            onClick={(e) => e.stopPropagation()}
+        >
+            <button
+                className="video-close"
+                onClick={() => setShowVideo(false)}
+            >
+                ✕
+            </button>
+
+            <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/dcTlrLhUIkY?autoplay=1"
+                title="How it Works"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+            />
+        </div>
+    </div>
+)}
                     </div>
                 </div>
+
             </section>
 
             <div className="home-section">
