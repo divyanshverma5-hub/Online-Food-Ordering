@@ -25,32 +25,6 @@ import ProfileRestaurant from './components/ProfileRestaurant'
 
 function App() {
 
-  // useEffect(() => {
-  //   const socket = new WebSocket("ws://localhost:3000");
-
-  //   socket.onopen = () => {
-  //     console.log("Connected");
-
-  //     socket.send(
-  //       JSON.stringify({
-  //         type: "register",
-  //         userId: localStorage.getItem("id"),
-  //         role: "customer"
-  //       })
-  //     );
-  //   };
-
-  //   socket.onmessage = (event) => {
-  //     console.log(event.data);
-  //   };
-
-  //   socket.onclose = () => {
-  //     console.log("Disconnected");
-  //   };
-
-  //   return () => socket.close();
-  // }, []);
-
   return (
     <>
       <Routes>
@@ -76,11 +50,6 @@ function App() {
         <Route path='/profileRestaurant' element={<ProfileRestaurant />} />
       </Routes>
 
-      {/* (If anybody reading, ignore it, its for me)
-        // Make unavailable instead of delete!
-        //if order rejected then 
-        //phone number!
-    */}
 
       <ToastContainer position='bottom-right' />
     </>
