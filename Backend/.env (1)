@@ -1,7 +1,0 @@
-DATABASE_URL=postgresql://neondb_owner:npg_WZo09NnvJqfk@ep-blue-unit-aojh6agz.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-
-JWT_SECRETKEY=Google
-SALTROUNDS=10
-
-RAZORPAY_KEY=rzp_test_TAycHGZRTZogc0
-RAZORPAY_SECRET=m1Fe0JfJREVs2epmwQcVbGxp
