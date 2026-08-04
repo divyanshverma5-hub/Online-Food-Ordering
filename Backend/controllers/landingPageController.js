@@ -34,10 +34,19 @@ export async function detailsController(req, res) {
 
 export async function searchController(req, res) {
     const { category, city } = req.query
-    // console.log(category)
-    // console.log(city)
+    
+    const search = `%${category}%`;
 
-    let result = await pool.query("SELECT DISTINCT restaurantUsers.* FROM restaurantUsers JOIN food ON food.restaurant_id = restaurantUsers.id WHERE food.category = $1 AND restaurantUsers.city = $2", [category, city]);
+    let result = await pool.query(
+        `SELECT DISTINCT restaurantUsers.* FROM restaurantUsers JOIN food ON food.restaurant_id = restaurantUsers.id
+     WHERE restaurantUsers.city = $2
+     AND (
+         food.category ILIKE $1
+         OR food.food_name ILIKE $1
+         OR restaurantUsers.restaurant_name ILIKE $1
+     )`,
+        [search, city]
+    );
 
     res.json({
         success: true,

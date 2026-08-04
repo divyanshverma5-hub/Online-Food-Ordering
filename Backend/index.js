@@ -38,13 +38,37 @@ app.use(home);
 app.use(payment);
 
 //orders related:
-app.use("/order",orders);
+app.use("/order", orders);
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+//WebSockets:
+import http from "node:http";
+import { WebSocketServer } from "ws";
 
+const server = http.createServer(app);
+const wsServer = new WebSocketServer({ server: server });
 
+const clients = new Map();
 
+wsServer.on('connection', (websocket) => {
+    console.log(`WebSocket connection...`);
+
+    websocket.send("Connected Successfully");
+
+    websocket.on("message", (data) => {
+
+        const message = JSON.parse(data.toString());
+
+        if (message.type === "register") {
+            clients.set(message.userId, websocket);
+
+            console.log(`User ${message.userId} registered`);
+            console.log(clients);
+        }
+
+    });
+})
 
 
 
@@ -59,6 +83,6 @@ app.get("/", (req, res) => {
     })
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on port ${port}`)
 })

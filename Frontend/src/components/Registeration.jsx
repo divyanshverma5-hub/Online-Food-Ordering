@@ -4,7 +4,9 @@ import { useNavigate, Link } from "react-router-dom";
 import "../style/registeration.css";
 import Footer from "./Footer";
 
-function Registeration(){
+import { GoogleLogin } from "@react-oauth/google";
+
+function Registeration() {
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -14,12 +16,12 @@ function Registeration(){
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
-        if(localStorage.getItem("login")){
+        if (localStorage.getItem("login")) {
             toast.info("You are already logged in");
             navigate("/");
         }
     });
-    async function handleSubmit(event){
+    async function handleSubmit(event) {
         event.preventDefault();
         let result = await fetch("http://localhost:3000/registeration", {
             method: "POST",
@@ -29,18 +31,18 @@ function Registeration(){
             body: JSON.stringify(data)
         });
         result = await result.json();
-        if(result.success){
+        if (result.success) {
             document.cookie = "token=" + result.token;
             localStorage.setItem("login", data.email);
             localStorage.setItem("name", data.name);
             localStorage.setItem("id", result.id);
             localStorage.setItem("role", "customer");
             window.location = "/";
-        }else{
+        } else {
             toast.error(result.msg);
         }
     }
-    function handleChange(event){
+    function handleChange(event) {
         let name1 = event.target.name;
         let value = event.target.value;
         setData(prev => ({
@@ -48,12 +50,47 @@ function Registeration(){
             [name1]: value
         }));
     }
-    return(
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const response = await fetch("http://localhost:3000/google", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token: credentialResponse.credential,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.cookie = "token=" + result.token;
+
+                localStorage.setItem("login", result.user.email);
+                localStorage.setItem("id", result.user.id);
+                localStorage.setItem("role", "customer");
+                localStorage.setItem("name", result.user.name);
+
+                toast.success("Login Successful");
+                window.location = "/";
+            }
+            else {
+                toast.error(result.message || result.msg);
+            }
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Google Login Failed");
+        }
+    };
+    return (
         <div className="signup-page">
             <div className="signup-wrap">
                 <div className="signup-logo">
                     <div className="signup-logo__icon">
-                        
+
                     </div>
                     <span>SpiceRush</span>
                 </div>
@@ -61,6 +98,12 @@ function Registeration(){
                 <p className="signup-sub">
                     Create an account to start ordering your favorite meals.
                 </p>
+                <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => {
+                        console.log("Google Login Failed");
+                    }}
+                />
                 <div className="signup-card">
                     <form onSubmit={handleSubmit}>
                         <label>Full Name</label>

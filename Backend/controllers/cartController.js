@@ -69,3 +69,15 @@ export async function cartQuantity(req, res) {
         msg: "Updated Successfully"
     })
 }
+
+export async function cartCount(req,res) {
+
+    const {customer_id} = req.query;
+
+    let cnt = await pool.query('SELECT id FROM cart WHERE customer_id = $1', [customer_id]);
+
+    res.send({
+        success: true,
+        cnt: cnt.rowCount
+    })
+}

@@ -1,6 +1,6 @@
 import express from "express"
 
-import { authLogin, authRegister, authRestaurantLogin, authRestaurantRegister } from "../controllers/authController.js";
+import { authLogin, authRegister, authRestaurantLogin, authRestaurantRegister, googleLogin } from "../controllers/authController.js";
 import upload from "../middleware/multer.js";
 
 const router = express.Router()
@@ -12,5 +12,7 @@ router.post("/login", authLogin);
 router.post("/restaurantRegister",upload.single("image"), authRestaurantRegister);
 
 router.post("/restaurantLogin", authRestaurantLogin);
+
+router.post("/google", googleLogin);
 
 export default router;

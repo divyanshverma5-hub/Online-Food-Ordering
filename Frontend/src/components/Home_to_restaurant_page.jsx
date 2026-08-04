@@ -30,21 +30,23 @@ function Home_to_restaurant_page(){
     async function handleAdd(food_id){
 
         let customer_id = localStorage.getItem("id");
-
-        let result = await fetch("http://localhost:3000/addToCart", {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ food_id, customer_id })
-        });
-
-        result = await result.json();
-
-        if(result.success){
-            toast.success(result.msg);
+        if (!customer_id){
+            toast.error("Login to add items.")
         }
         else{
-            toast.error(result.msg);
+            let result = await fetch("http://localhost:3000/addToCart", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ food_id, customer_id })
+            });
+            result = await result.json();
+            if (result.success) {
+                toast.success(result.msg);
+            }
+            else {
+                toast.error(result.msg);
+            }
         }
     }
 

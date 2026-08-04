@@ -3,7 +3,85 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const saltRounds = Number(process.env.SALTROUNDS);
+
+export const googleLogin = async (req, res) => {
+    try {
+        const { token } = req.body;
+
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        const { email, name } = payload;
+
+        let result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+
+        let user;
+
+        //Existing user
+        if (result.rows.length > 0) {
+            user = result.rows[0];
+
+            const jwtToken = jwt.sign(
+                {
+                    id: user.id,
+                    email: user.email,
+                },
+                process.env.JWT_SECRETKEY,
+                {
+                    expiresIn: "7d",
+                }
+            );
+
+            return res.status(200).json({
+                success: true,
+                token: jwtToken,
+                user,
+            });
+        }
+
+        //New User
+
+        result = await pool.query(`INSERT INTO users(name,email,password,auth_provider) VALUES($1,$2,NULL,'google') RETURNING *`, [name, email]);
+
+        user = result.rows[0];
+
+        const jwtToken = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "7d",
+            }
+        );
+
+        return res.json({
+            success: true,
+            msg: "Login done",
+            token: jwtToken,
+            id: user.id,
+            name: user.name,
+            email: user.email
+        });
+    } catch (err) {
+
+        console.error(err);
+
+        return res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
+};
 
 export async function authRegister(req, res) {
     try {
@@ -16,7 +94,7 @@ export async function authRegister(req, res) {
             });
         }
 
-        // Prevent duplicate email
+        // Preventing duplicate email
         const check = await pool.query(
             "SELECT * FROM users WHERE email = $1",
             [email]
@@ -34,8 +112,8 @@ export async function authRegister(req, res) {
 
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO users (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *",
-            [name, email, hashedPassword, phone]
+            "INSERT INTO users (name, email, password, phone, auth_provider) VALUES ($1, $2, $3, $4) RETURNING *",
+            [name, email, hashedPassword, phone, 'local']
         );
 
         const user = result.rows[0];
@@ -101,6 +179,13 @@ export async function authLogin(req, res) {
         }
 
         const user = result.rows[0];
+
+
+        if (user.auth_provider === "google") {
+            return res.status(400).json({
+                message: "This account was created using Google. Please sign in with Google."
+            });
+        }
 
         // Compare entered password with stored hash
         const match = await bcrypt.compare(password, user.password);
