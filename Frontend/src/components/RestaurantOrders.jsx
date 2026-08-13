@@ -2,6 +2,7 @@ import "../style/restarauntorders.css";
 
 import RestaurantNavbar from "./RestaurantNavbar";
 import ViewItems from "./ViewItems";
+import { useState, useEffect } from "react";
 
 function RestaurantOrders() {
 
