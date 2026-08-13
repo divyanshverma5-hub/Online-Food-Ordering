@@ -11,6 +11,9 @@ import home from "./routes/landingPage.js";
 import payment from "./routes/payment.js";
 import orders from "./routes/orders.js";
 
+import http from "node:http";
+import { initializeSocket } from "./socket/socket.js";
+
 const app = express()
 const port = 3000
 
@@ -41,48 +44,27 @@ app.use(payment);
 app.use("/order", orders);
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//WebSockets:
-import http from "node:http";
-import { WebSocketServer } from "ws";
-
-const server = http.createServer(app);
-const wsServer = new WebSocketServer({ server: server });
-
-const clients = new Map();
-
-wsServer.on('connection', (websocket) => {
-    console.log(`WebSocket connection...`);
-
-    websocket.send("Connected Successfully");
-
-    websocket.on("message", (data) => {
-
-        const message = JSON.parse(data.toString());
-
-        if (message.type === "register") {
-            clients.set(message.userId, websocket);
-
-            console.log(`User ${message.userId} registered`);
-            console.log(clients);
-        }
-
-    });
-})
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 app.get("/", (req, res) => {
     res.json({
         success: true,
         msg: "backend working"
     })
 })
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//WebSockets:
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+initializeSocket(server);
 
 server.listen(port, () => {
-    console.log(`Server running on port ${port}`)
-})
+    console.log(`Server running on port ${port}`);
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// app.listen(port, () => {
+//     console.log(`Server running on port ${port}`);
+// });

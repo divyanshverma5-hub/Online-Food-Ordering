@@ -4,6 +4,7 @@ import env from "dotenv"
 env.config();
 
 import pool from "../config/db.js";
+import { emitToUser } from "../socket/socket.js";
 
 const instance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY,
@@ -12,9 +13,9 @@ const instance = new Razorpay({
 
 const pendingOrders = {};
 
-export async function checkout(req,res) {
+export async function checkout(req, res) {
     try {
-        const {amount, customer_id, restaurant_id, address} = req.body;
+        const { amount, customer_id, restaurant_id, address } = req.body;
         // console.log(req.body);
         const order = await instance.orders.create({
             amount: Math.round(Number(amount) * 100),
@@ -48,7 +49,7 @@ export async function checkout(req,res) {
     }
 }
 
-export async function paymentVerification(req,res) {
+export async function paymentVerification(req, res) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -68,12 +69,22 @@ export async function paymentVerification(req,res) {
         // let order_id = ordering.id;
         const order_id = ordering.rows[0].id;
 
-        let allItems = await pool.query("SELECT cart.food_id, cart.quantity, food.price FROM cart JOIN food ON cart.food_id = food.id WHERE customer_id = ($1)",[details.customer_id])
+        console.log("Sending new-order to restaurant", details.restaurant_id);
+        emitToUser(
+            "restaurant",
+            details.restaurant_id,
+            "new-order",
+            {
+                orderId: order_id
+            }
+        );
+
+        let allItems = await pool.query("SELECT cart.food_id, cart.quantity, food.price FROM cart JOIN food ON cart.food_id = food.id WHERE customer_id = ($1)", [details.customer_id])
         allItems = allItems.rows;
-        for (let i of allItems){
-            await pool.query("INSERT INTO orderItems (order_id, food_id, quantity, price_at_purchase) VALUES ($1, $2, $3, $4) ",[order_id, i.food_id, i.quantity,Math.round(i.price)])
+        for (let i of allItems) {
+            await pool.query("INSERT INTO orderItems (order_id, food_id, quantity, price_at_purchase) VALUES ($1, $2, $3, $4) ", [order_id, i.food_id, i.quantity, Math.round(i.price)])
         }
-        await pool.query("DELETE FROM cart WHERE customer_id = ($1)",[details.customer_id])
+        await pool.query("DELETE FROM cart WHERE customer_id = ($1)", [details.customer_id])
 
 
         res.redirect(`http://localhost:5173/cart/confirmation?reference=${razorpay_payment_id}`)

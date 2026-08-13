@@ -3,7 +3,10 @@ import ViewItems from "./ViewItems";
 import RestaurantNavbar from "./RestaurantNavbar";
 import "../style/restarauntorders.css";
 
-function RestaurantOrders(){
+// import { getSocket } from "../utils/socket";
+// import { toast } from "react-toastify";
+
+function RestaurantOrders() {
     let restaurant_id = localStorage.getItem("id");
     const [detail, setDetail] = useState([]);
     const [dishes, setDishes] = useState([]);
@@ -29,18 +32,44 @@ function RestaurantOrders(){
     useEffect(() => {
         getData();
     }, []);
-    async function seeDishes(order_id){
+
+    // useEffect(() => {
+
+    //     const socket = getSocket();
+
+    //     if (!socket) return;
+
+    //     const handleNewOrder = (data) => {
+
+    //         toast.success("🔔 New Order Received!");
+
+    //         getData();
+
+    //     };
+
+    //     socket.on("new-order", handleNewOrder);
+
+    //     return () => {
+
+    //         socket.off("new-order", handleNewOrder);
+
+    //     };
+
+    // }, []);
+
+
+    async function seeDishes(order_id) {
         let result = await fetch(`http://localhost:3000/order/seeDishes?id=${order_id}`);
         result = await result.json();
         setDishes(result.dishes);
-        if(show === order_id){
+        if (show === order_id) {
             setShow(null);
         }
-        else{
+        else {
             setShow(order_id);
         }
     }
-    async function handleChoice(choice, order_id){
+    async function handleChoice(choice, order_id) {
         await fetch("http://localhost:3000/order/changeStatus", {
             method: "PATCH",
             headers: {
@@ -53,19 +82,19 @@ function RestaurantOrders(){
         });
         getData();
     }
-    function statusClass(status){
-        if(status === "Delivered"){
+    function statusClass(status) {
+        if (status === "Delivered") {
             return "r-badge r-badge-delivered";
         }
-        if(status === "Rejected"){
+        if (status === "Rejected") {
             return "r-badge r-badge-rejected";
         }
-        if(status === "Pending"){
+        if (status === "Pending") {
             return "r-badge r-badge-pending";
         }
         return "r-badge r-badge-active";
     }
-    return(
+    return (
         <>
             <RestaurantNavbar />
             <div className="rorders-page">
@@ -93,7 +122,7 @@ function RestaurantOrders(){
                         }
                         {
                             pending.map((i) => {
-                                return(
+                                return (
                                     <div
                                         className="rorder-card"
                                         key={i.id}
@@ -115,7 +144,7 @@ function RestaurantOrders(){
                                             ₹{i.total_price}
                                         </p>
                                         <div className="rorder-actions">
-                                        <button
+                                            <button
                                                 className="btn-outline"
                                                 onClick={() => seeDishes(i.id)}
                                             >
@@ -165,7 +194,7 @@ function RestaurantOrders(){
                         }
                         {
                             active.map((i) => {
-                                return(
+                                return (
                                     <div
                                         className="rorder-card"
                                         key={i.id}
@@ -242,12 +271,12 @@ function RestaurantOrders(){
                         }
                         {
                             history.map((i) => {
-                                return(
+                                return (
                                     <div
                                         className="rorder-card"
                                         key={i.id}
                                     >
-                                       <div className="rorder-card-top">
+                                        <div className="rorder-card-top">
                                             <div>
                                                 <h2>
                                                     Order #{i.id}

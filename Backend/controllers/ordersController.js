@@ -1,12 +1,35 @@
 import pool from "../config/db.js";
+import { emitToUser } from "../socket/socket.js";
 
 export async function changeOrderStatus(req, res) {
+
     const { choice, order_id } = req.body;
-    await pool.query("UPDATE orders SET status = $1 WHERE id = $2", [choice, order_id])
+
+    await pool.query( "UPDATE orders SET status = $1 WHERE id = $2", [choice, order_id]);
+
+    const result = await pool.query( "SELECT customer_id FROM orders WHERE id = $1", [order_id]);
+
+    const customerId = result.rows[0].customer_id;
+
+    console.log("STATUS UPDATE:", {
+        orderId: order_id,
+        customerId: customerId,
+        status: choice
+    });
+
+    emitToUser(
+        "customer",
+        customerId,
+        "order-status-updated",
+        {
+            orderId: order_id,
+            status: choice
+        }
+    );
 
     res.json({
         success: true
-    })
+    });
 }
 
 export async function seeOrderDishes(req, res) {

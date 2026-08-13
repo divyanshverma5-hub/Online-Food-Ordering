@@ -2,26 +2,74 @@ import React, { useEffect, useState } from "react";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/orders.css"
 
+// import { toast } from "react-toastify";
+// import { getSocket } from "../utils/socket";
+
 function Orders() {
     let customer_id = localStorage.getItem("id");
     const [detail, setDetail] = useState([]);
     const [dishesMap, setDishesMap] = useState({});
     const [tab, setTab] = useState("ongoing");
-    useEffect(() => {
-        let getData = async () => {
-            let result = await fetch(`http://localhost:3000/order/details?id=${customer_id}`);
-            result = await result.json();
-            setDetail(result.detail);
-            let map = {};
-            for (let order of result.detail) {
-                let dishResult = await fetch(`http://localhost:3000/order/seeDishes?id=${order.id}`);
-                dishResult = await dishResult.json();
-                map[order.id] = dishResult.dishes;
-            }
-            setDishesMap(map);
+
+    async function getData() {
+
+        let result = await fetch(
+            `http://localhost:3000/order/details?id=${customer_id}`
+        );
+
+        result = await result.json();
+
+        setDetail(result.detail);
+
+        let map = {};
+
+        for (let order of result.detail) {
+
+            let dishResult = await fetch(
+                `http://localhost:3000/order/seeDishes?id=${order.id}`
+            );
+
+            dishResult = await dishResult.json();
+
+            map[order.id] = dishResult.dishes;
+
         }
+
+        setDishesMap(map);
+
+    }
+
+    // useEffect(() => {
+
+    //     const socket = getSocket();
+    //     console.log("ORDERS PAGE SOCKET:", socket?.id);
+    //     if (!socket) return;
+
+    //     const handleStatusUpdate = (data) => {
+
+    //         console.log("ORDER STATUS UPDATED:", data);
+
+    //         toast.info(
+    //             `Order #${data.orderId} is now ${data.status}`
+    //         );
+
+    //         getData();
+
+    //     };
+
+    //     socket.on("order-status-updated", handleStatusUpdate);
+
+    //     return () => {
+
+    //         socket.off("order-status-updated", handleStatusUpdate);
+
+    //     };
+
+    // }, []);
+
+    useEffect(() => {
         getData();
-    }, [])
+    }, []);
 
     let pending = detail.filter((i) => i.status !== "Delivered" && i.status !== "Rejected");
     let history = detail.filter((i) => i.status === "Delivered" || i.status === "Rejected");

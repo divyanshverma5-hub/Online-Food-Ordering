@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Registeration from './components/Registeration'
 import { Route, Routes } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from "react-toastify";
 
 import Home from './components/Home'
 import Login from './components/Login'
@@ -23,7 +23,51 @@ import RestaurantNavbar from './components/RestaurantNavbar'
 import ProfileCustomer from './components/ProfileCustomer'
 import ProfileRestaurant from './components/ProfileRestaurant'
 
+import { connectSocket } from "./utils/socket";
+
 function App() {
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
+  useEffect(() => {
+
+    const socket = connectSocket();
+    if (!socket) return;
+    const role = localStorage.getItem("role");
+
+    // Restaurant notifications
+    if (role === "restaurant") {
+      const handleNewOrder = (data) => {
+        console.log("🔔 NEW ORDER RECEIVED:", data);
+        toast.success("🔔 New Order Received!");
+      };
+
+      socket.on("new-order", handleNewOrder);
+
+      return () => {
+        socket.off("new-order", handleNewOrder);
+      };
+    }
+
+    // Customer notifications
+    if (role === "customer") {
+      const handleStatusUpdate = (data) => {
+        console.log("🔔 ORDER STATUS UPDATED:", data);
+        toast.info(
+          `Order #${data.orderId} is now ${data.status}`
+        );
+      };
+
+      socket.on("order-status-updated", handleStatusUpdate);
+
+      return () => {
+        socket.off("order-status-updated", handleStatusUpdate);
+      };
+    }
+
+  }, []);
 
   return (
     <>

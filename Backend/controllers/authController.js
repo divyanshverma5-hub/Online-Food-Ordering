@@ -112,7 +112,7 @@ export async function authRegister(req, res) {
 
         // Save hashed password
         const result = await pool.query(
-            "INSERT INTO users (name, email, password, phone, auth_provider) VALUES ($1, $2, $3, $4) RETURNING *",
+            "INSERT INTO users (name, email, password, phone, auth_provider) VALUES ($1, $2, $3, $4, $5) RETURNING *",
             [name, email, hashedPassword, phone, 'local']
         );
 
