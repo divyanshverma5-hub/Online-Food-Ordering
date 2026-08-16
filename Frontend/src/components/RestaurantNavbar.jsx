@@ -9,6 +9,8 @@ function RestaurantNavbar({ isHome }) {
         localStorage.removeItem("login")
         localStorage.removeItem("role");
         localStorage.removeItem("name");
+        
+        document.cookie = "token=; Max-Age=0; path=/;";
         toast.success("Successfully logged Out")
         navigate("/")
     }

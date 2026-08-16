@@ -16,7 +16,7 @@ export async function cityController(req, res) {
 }
 
 export async function detailsController(req, res) {
-    const { id } = req.query
+    const { id } = req.query;
     let profile = await pool.query("SELECT * FROM restaurantUsers WHERE id = $1", [id]);
     profile = profile.rows[0];
 
@@ -55,7 +55,7 @@ export async function searchController(req, res) {
 }
 
 export async function customerProfile(req, res) {
-    const { customer_id } = req.query;
+    const customer_id  = req.user.id;
     const data = await pool.query("SELECT * FROM users WHERE id = ($1)", [customer_id]);
 
     res.json({
@@ -65,7 +65,8 @@ export async function customerProfile(req, res) {
 }
 
 export async function EDITcustomerProfile(req, res) {
-    const { name, phone, id } = req.body
+    const { name, phone } = req.body
+    const id = req.user.id
     console.log(name)
     console.log(phone)
 
@@ -79,7 +80,7 @@ export async function EDITcustomerProfile(req, res) {
 }
 
 export async function restaurantProfile(req, res) {
-    const { restaurant_id } = req.query;
+    const restaurant_id  = req.user.id;
     const data = await pool.query("SELECT * FROM restaurantUsers WHERE id = ($1)", [restaurant_id]);
 
     res.json({
@@ -89,8 +90,9 @@ export async function restaurantProfile(req, res) {
 }
 
 export async function EDITrestaurantProfile(req, res) {
-    const { owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, id, cloudinary_public_id } = req.body
+    const { owner_name, restaurant_name, phone, city, location, open_time, close_time, img_url, cloudinary_public_id } = req.body
 
+    const id = req.user.id
     let imageUrl = img_url;
     let publicId = cloudinary_public_id;
 

@@ -14,7 +14,9 @@ function Confirmation() {
 
     async function getOrder() {
         let result = await fetch(
-            `http://localhost:3000/order/details?id=${customer_id}`
+            `http://localhost:3000/order/details?id=${customer_id}`,{
+                credentials: "include"
+            }
         );
         result = await result.json();
 

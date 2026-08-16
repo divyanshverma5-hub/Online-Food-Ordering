@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import env from "dotenv"
+import cookieParser from "cookie-parser";
 env.config();
 
 import pool from "./config/db.js"
@@ -20,6 +21,8 @@ const port = 3000
 //middleware:
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -50,18 +53,15 @@ app.get("/", (req, res) => {
         msg: "backend working"
     })
 })
-///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //WebSockets:
 const server = http.createServer(app);
 
-// Initialize Socket.IO
-initializeSocket(server);
+initializeSocket(server); //initializing socket.io
 
 server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

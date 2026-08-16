@@ -9,7 +9,9 @@ function ProfileCustomer(){
     const [changeData, setChangeData] = useState(data);
     useEffect(() => {
         let getData = async () => {
-            let result = await fetch(`http://localhost:3000/profileCustomer?customer_id=${localStorage.getItem("id")}`);
+            let result = await fetch(`http://localhost:3000/profileCustomer`,{
+                credentials: "include"
+            });
             result = await result.json();
             setData(result.data[0]);
             setChangeData(result.data[0]);
@@ -19,6 +21,7 @@ function ProfileCustomer(){
     async function handleSubmit(){
         let result = await fetch("http://localhost:3000/editCustomerProfile", {
             method: "PATCH",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(changeData)
         });

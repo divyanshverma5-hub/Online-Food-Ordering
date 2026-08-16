@@ -12,7 +12,9 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
 
     useEffect(() => {
         const getCount = async () => {
-            let result = await fetch(`http://localhost:3000/cart/count?customer_id=${localStorage.getItem("id")}`);
+            let result = await fetch(`http://localhost:3000/cart/count`,{
+                credentials: "include"
+            });
             result = await result.json();
 
             setCntCart(result.cnt);

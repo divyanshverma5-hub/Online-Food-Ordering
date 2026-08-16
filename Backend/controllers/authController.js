@@ -33,6 +33,7 @@ export const googleLogin = async (req, res) => {
                 {
                     id: user.id,
                     email: user.email,
+                    role: "customer"
                 },
                 process.env.JWT_SECRETKEY,
                 {
@@ -58,7 +59,7 @@ export const googleLogin = async (req, res) => {
                 id: user.id,
                 email: user.email,
             },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRETKEY,
             {
                 expiresIn: "7d",
             }
@@ -122,7 +123,8 @@ export async function authRegister(req, res) {
             {
                 name: user.name,
                 id: user.id,
-                email: user.email
+                email: user.email,
+                role: "customer"
             },
             process.env.JWT_SECRETKEY,
             { expiresIn: "5d" },
@@ -200,7 +202,8 @@ export async function authLogin(req, res) {
         jwt.sign(
             {
                 id: user.id,
-                email: user.email
+                email: user.email,
+                role: "customer"
             },
             process.env.JWT_SECRETKEY,
             { expiresIn: "5d" },
@@ -282,7 +285,8 @@ export async function authRestaurantRegister(req, res) {
         jwt.sign(
             {
                 id: user.id,
-                email: user.email
+                email: user.email,
+                role: "restaurant"
             },
             process.env.JWT_SECRETKEY,
             { expiresIn: "5d" },
@@ -353,7 +357,8 @@ export async function authRestaurantLogin(req, res) {
         jwt.sign(
             {
                 id: user.id,
-                email: user.email
+                email: user.email,
+                role: "restaurant"
             },
             process.env.JWT_SECRETKEY,
             { expiresIn: "5d" },

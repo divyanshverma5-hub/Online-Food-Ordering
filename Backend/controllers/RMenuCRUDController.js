@@ -21,7 +21,17 @@ export async function homeRestaurant(req, res) {
 
 export async function addFood(req, res) {
 
-    const { name, description, is_veg, category, price, r_id, availability } = req.body;
+    let r_id = req.user.id;
+
+    const check = await pool.query("SELECT * FROM restaurantUsers WHERE id = $1", [r_id]);
+    if (check.rows.length === 0) {
+        return res.status(404).json({
+            success: false,
+            msg: "Restaurant not found"
+        });
+    }
+
+    const { name, description, is_veg, category, price, availability } = req.body;
 
     let imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL2a8mpGPRqqiVGmjV-XuhpdE5n3duNtapPiz6jeR_mQwzqWQWHTCham0&s=10";
     let publicId = null;
@@ -55,7 +65,25 @@ export async function deleteItem(req, res) {
 
 export async function editItem(req, res) {
 
-    const { category, availability, description, food_name, is_veg, price, id, restaurant_id, cloudinary_public_id, img_url } = req.body;
+    let restaurantId = req.user.id;
+
+    const { category, availability, description, food_name, is_veg, price, id, cloudinary_public_id, img_url } = req.body;
+
+    const foodCheck = await pool.query("SELECT restaurant_id FROM food WHERE id = $1",[id]);
+
+    if (foodCheck.rows.length === 0) {
+        return res.status(404).json({
+            success: false,
+            msg: "Food item not found"
+        });
+    }
+
+    if (Number(foodCheck.rows[0].restaurant_id) !==Number(restaurantId)) {
+        return res.status(403).json({
+            success: false,
+            msg: "You aren't authorised to edit this food item"
+        });
+    }
 
     let imageUrl = img_url;
     let publicId = cloudinary_public_id;
@@ -74,8 +102,8 @@ export async function editItem(req, res) {
 
     await pool.query(
         `UPDATE food
-         SET food_name = $1, description = $2, is_veg = $3, category = $4, price = $5, restaurant_id = $6, availability = $7, img_url = $8, cloudinary_public_id = $9 WHERE id = $10`,
-        [food_name, description, is_veg, category, price, restaurant_id, availability, imageUrl, publicId, id]
+         SET food_name = $1, description = $2, is_veg = $3, category = $4, price = $5, availability = $6, img_url = $7, cloudinary_public_id = $8 WHERE id = $9`,
+        [food_name, description, is_veg, category, price, availability, imageUrl, publicId, id]
     );
 
     res.json({

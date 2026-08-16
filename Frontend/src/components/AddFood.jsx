@@ -105,7 +105,7 @@ function AddFood() {
                 navigate("/homeRestaurant");
             }
             else {
-                toast.error("Something went wrong.");
+                toast.error(result.msg);
             }
         }
     }

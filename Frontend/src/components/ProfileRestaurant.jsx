@@ -13,9 +13,9 @@ function ProfileRestaurant() {
 
     useEffect(() => {
         const getData = async () => {
-            let result = await fetch(
-                `http://localhost:3000/profileRestaurant?restaurant_id=${localStorage.getItem("id")}`
-            );
+            let result = await fetch(`http://localhost:3000/profileRestaurant`, {
+                credentials: "include"
+            });
 
             result = await result.json();
 
@@ -58,7 +58,8 @@ function ProfileRestaurant() {
             "http://localhost:3000/editRestaurantProfile",
             {
                 method: "PATCH",
-                body: formData
+                body: formData,
+                credentials: "include"
             }
         );
 

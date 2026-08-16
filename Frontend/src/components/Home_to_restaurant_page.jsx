@@ -14,7 +14,9 @@ function Home_to_restaurant_page(){
     useEffect(() => {
 
         const getData = async () => {
-            let result = await fetch(`http://localhost:3000/details?id=${id}`);
+            let result = await fetch(`http://localhost:3000/details?id=${id}`,{
+                credentials: "include"
+            });
             result = await result.json();
 
             let profile = result.profile;
@@ -38,7 +40,7 @@ function Home_to_restaurant_page(){
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ food_id, customer_id })
+                body: JSON.stringify({ food_id })
             });
             result = await result.json();
             if (result.success) {

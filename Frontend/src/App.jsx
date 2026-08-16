@@ -100,4 +100,8 @@ function App() {
   )
 }
 
+// add phone number
+// route protection
+// availability
+
 export default App

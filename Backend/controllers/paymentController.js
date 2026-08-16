@@ -15,7 +15,30 @@ const pendingOrders = {};
 
 export async function checkout(req, res) {
     try {
-        const { amount, customer_id, restaurant_id, address } = req.body;
+        const customer_id = req.user.id;
+        const { address } = req.body;
+
+        const cartResult = await pool.query(`SELECT cart.food_id, cart.quantity, food.price, food.restaurant_id
+             FROM cart JOIN food
+             ON cart.food_id = food.id
+             WHERE cart.customer_id = $1`,
+            [customer_id]
+        );
+
+        if (cartResult.rows.length === 0) {
+            return res.status(400).json({
+                success: false,
+                msg: "Cart is empty"
+            });
+        }
+        const cartItems = cartResult.rows;
+        const restaurant_id = cartItems[0].restaurant_id;
+
+        let amount = 0;
+        for (const item of cartItems) {
+            amount += Number(item.price) * Number(item.quantity);
+        }
+
         // console.log(req.body);
         const order = await instance.orders.create({
             amount: Math.round(Number(amount) * 100),
@@ -42,7 +65,7 @@ export async function checkout(req, res) {
         });
 
     } catch (err) {
-        res.status(500).json({
+        res.status(500).status(500).json({
             success: false,
             error: err.message
         });

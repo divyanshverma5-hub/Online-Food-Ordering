@@ -17,7 +17,10 @@ function Orders() {
     async function getData() {
 
         let result = await fetch(
-            `http://localhost:3000/order/details?id=${customer_id}`
+            // `http://localhost:3000/order/details?id=${customer_id}`,{
+            `http://localhost:3000/order/details`,{
+                credentials: "include"
+            }
         );
 
         result = await result.json();
@@ -29,7 +32,9 @@ function Orders() {
         for (let order of result.detail) {
 
             let dishResult = await fetch(
-                `http://localhost:3000/order/seeDishes?id=${order.id}`
+                `http://localhost:3000/order/seeDishes?id=${order.id}`,{
+                    credentials: "include"
+                }
             );
 
             dishResult = await dishResult.json();
@@ -273,33 +278,3 @@ function Orders() {
 }
 
 export default Orders;
-
-// =======
-//     useEffect(() => {
-//         async function getData() {
-//             let result = await fetch(
-//                 `http://localhost:3000/order/details?id=${customer_id}`
-//             );
-
-//             result = await result.json();
-
-//             setDetail(result.detail);
-
-//             const map = {};
-
-//             for (const order of result.detail) {
-//                 let dishResult = await fetch(
-//                     `http://localhost:3000/order/seeDishes?id=${order.id}`
-//                 );
-
-//                 dishResult = await dishResult.json();
-
-//                 map[order.id] = dishResult.dishes;
-//             }
-
-//             setDishesMap(map);
-//         }
-// >>>>>>> svj
-
-//         getData();
-//     }, []);

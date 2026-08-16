@@ -2,7 +2,8 @@ import pool from "../config/db.js";
 
 export async function addToCart(req, res) {
 
-    const { customer_id, food_id } = req.body;
+    const customer_id = req.user.id;
+    const { food_id } = req.body;
 
     let twoRestaurants = await pool.query("SELECT food.restaurant_id FROM cart JOIN food ON food.id = cart.food_id WHERE cart.customer_id=$1 LIMIT 1", [customer_id]);
     let currentRestaurant = await pool.query("SELECT restaurant_id FROM food WHERE id = $1", [food_id]);
@@ -33,7 +34,7 @@ export async function addToCart(req, res) {
 }
 
 export async function cartMenu(req, res) {
-    const { customer_id } = req.query
+    const customer_id = req.user.id;
     let result = await pool.query(
         "SELECT cart.id, cart.quantity ,food.food_name ,food.price ,food.img_url ,food.description ,food.is_veg, food.id, food.restaurant_id, restaurantUsers.restaurant_name FROM cart JOIN food ON cart.food_id = food.id JOIN restaurantUsers ON food.restaurant_id = restaurantUsers.id      WHERE cart.customer_id = $1 ORDER BY cart.id",
         [customer_id]);
@@ -59,10 +60,11 @@ export async function cartMenu(req, res) {
 
 export async function cartQuantity(req, res) {
     let term = 1;
+    const customer_id = req.user.id;
     const { sign, qty, food_id } = req.body
     if (sign == '-') term = -1;
 
-    await pool.query("UPDATE cart SET quantity = $1 WHERE food_id = $2", [qty + term, food_id]);
+    await pool.query("UPDATE cart SET quantity = $1 WHERE food_id = $2 AND customer_id = $3", [qty + term, food_id, customer_id]);
     await pool.query("DELETE FROM cart WHERE quantity = ($1)", [0]);
     res.json({
         success: true,
@@ -72,7 +74,7 @@ export async function cartQuantity(req, res) {
 
 export async function cartCount(req,res) {
 
-    const {customer_id} = req.query;
+    const customer_id = req.user.id;
 
     let cnt = await pool.query('SELECT id FROM cart WHERE customer_id = $1', [customer_id]);
 
