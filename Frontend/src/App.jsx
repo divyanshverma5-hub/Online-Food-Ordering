@@ -22,6 +22,7 @@ import CustomerNavbar from './components/CustomerNavbar'
 import RestaurantNavbar from './components/RestaurantNavbar'
 import ProfileCustomer from './components/ProfileCustomer'
 import ProfileRestaurant from './components/ProfileRestaurant'
+import ProtectedRoute from './components/ProtectedRoute';
 
 import { connectSocket } from "./utils/socket";
 
@@ -78,20 +79,25 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/footer' element={<Footer />} />
         <Route path='/restaurantRegister' element={<RestaurantRegister />} />
-        <Route path='/homeRestaurant' element={<HomeRestaurant />} />
-        <Route path='/addFood' element={<AddFood />} />
-        <Route path='/editFood' element={<EditFood />} />
-        <Route path='/home_to_restaurant_page/:id' element={<Home_to_restaurant_page />} />
         <Route path='/restaurantLogin' element={<RestaurantLogin />} />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/cart/confirmation' element={<Confirmation />} />
-        <Route path='/orders' element={<Orders />} />
-        <Route path='/restaurantOrders' element={<RestaurantOrders />} />
-        <Route path='/viewItems' element={<ViewItems />} />
-        <Route path='/customerNavbar' element={<CustomerNavbar />} />
+        <Route path='/home_to_restaurant_page/:id' element={<Home_to_restaurant_page />} />
         <Route path='/restaurantNavbar' element={<RestaurantNavbar />} />
-        <Route path='/profileCustomer' element={<ProfileCustomer />} />
-        <Route path='/profileRestaurant' element={<ProfileRestaurant />} />
+        <Route path='/customerNavbar' element={<CustomerNavbar />} />
+        <Route path='/viewItems' element={<ViewItems />} />
+
+        {/* customer only */}
+        <Route path='/cart' element={<ProtectedRoute role="customer"><Cart /></ProtectedRoute>} />
+        <Route path='/cart/confirmation' element={<ProtectedRoute role="customer"> <Confirmation /> </ProtectedRoute>} />
+        <Route path='/orders' element={<ProtectedRoute role="customer"><Orders /></ProtectedRoute>} />
+        <Route path='/profileCustomer' element={<ProtectedRoute role="customer"><ProfileCustomer /></ProtectedRoute>} />
+
+        {/* restaurant only */}
+        <Route path='/homeRestaurant' element={<ProtectedRoute role="restaurant"><HomeRestaurant /></ProtectedRoute>} />
+        <Route path='/addFood' element={<ProtectedRoute role="restaurant"><AddFood /></ProtectedRoute>} />
+        <Route path='/editFood' element={<ProtectedRoute role="restaurant"><EditFood /></ProtectedRoute>} />
+        <Route path='/restaurantOrders' element={<ProtectedRoute role="restaurant"><RestaurantOrders /></ProtectedRoute>} />
+        <Route path='/profileRestaurant' element={<ProtectedRoute role="restaurant"><ProfileRestaurant /></ProtectedRoute>} />
+
       </Routes>
 
 
@@ -101,7 +107,6 @@ function App() {
 }
 
 // add phone number
-// route protection
 // availability
 
 export default App
