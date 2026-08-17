@@ -51,16 +51,37 @@ export async function addFood(req, res) {
     })
 }
 
-export async function deleteItem(req, res) {
-    const { id_item } = req.params;
+export async function changeAvailability(req, res) {
 
-    // console.log(id_item);
-    await pool.query("DELETE FROM food WHERE id = $1", [id_item]);
+    try {
+        const restaurantId = req.user.id;
+        const { food_id, availability } = req.body;
 
-    res.json({
-        success: true,
-        msg: "Item deleted successfully",
-    })
+        const result = await pool.query(`UPDATE food SET availability = $1 WHERE id = $2 AND restaurant_id = $3 RETURNING id, availability`,
+            [availability, food_id, restaurantId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                msg: "Food not found or you are not authorised"
+            });
+        }
+
+        res.json({
+            success: true,
+            msg: "Availability updated successfully",
+            availability: result.rows[0].availability
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            msg: "Failed to update availability"
+        });
+    }
 }
 
 export async function editItem(req, res) {

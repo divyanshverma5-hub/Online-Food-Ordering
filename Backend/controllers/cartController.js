@@ -16,6 +16,15 @@ export async function addToCart(req, res) {
         });
     }
 
+    let isavailable = await pool.query("SELECT availability FROM food WHERE id = $1",[food_id]);
+   
+    if(!isavailable.rows[0].availability){
+        res.json({
+            success:false,
+            msg: "Item is currently unavailable."
+        })
+    }
+
     let isPresent = await pool.query("SELECT * FROM cart WHERE customer_id = $1 AND food_id = $2", [customer_id, food_id])
     // console.log(isPresent.rows);
 

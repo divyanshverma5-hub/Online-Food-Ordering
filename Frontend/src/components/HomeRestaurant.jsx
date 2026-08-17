@@ -17,40 +17,39 @@ function HomeRestaurant() {
     const [data, setData] = useState([]);
     const [food, setFood] = useState([]);
 
+    async function getData() {
+        const id = localStorage.getItem("id");
+
+        let result = await fetch(
+            `http://localhost:3000/homeRestaurant?id=${id}`
+        );
+
+        result = await result.json();
+
+        setData(result.ans);
+        setFood(result.food_list);
+    }
     useEffect(() => {
-        async function getData() {
-            const id = localStorage.getItem("id");
-
-            let result = await fetch(
-                `http://localhost:3000/homeRestaurant?id=${id}`
-            );
-
-            result = await result.json();
-
-            setData(result.ans);
-            setFood(result.food_list);
-        }
-
         getData();
     }, []);
 
-    async function handleDelete(event) {
-        await fetch(
-            `http://localhost:3000/homeRestaurant/delete/${event.target.id}`,
-            {
-                method: "DELETE",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ data })
-            }
-        );
+    // async function handleDelete(event) {
+    //     await fetch(
+    //         `http://localhost:3000/homeRestaurant/delete/${event.target.id}`,
+    //         {
+    //             method: "DELETE",
+    //             credentials: "include",
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             },
+    //             body: JSON.stringify({ data })
+    //         }
+    //     );
 
-        setFood((prev) =>
-            prev.filter((item) => item.id !== Number(event.target.id))
-        );
-    }
+    //     setFood((prev) =>
+    //         prev.filter((item) => item.id !== Number(event.target.id))
+    //     );
+    // }
 
     function handleEdit(item) {
         setSelectedFood(item);
@@ -68,6 +67,36 @@ function HomeRestaurant() {
 
         return acc;
     }, {});
+
+    async function handleAvailability(food_id, currentAvailability) {
+
+        try {
+            const result = await fetch("http://localhost:3000/homeRestaurant/availability", {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    food_id: food_id,
+                    availability: !currentAvailability
+                })
+            }
+            );
+
+            const data = await result.json();
+
+            if (!data.success) {
+                console.log(data.msg);
+                return;
+            }
+
+            getData();
+
+        } catch (error) {
+            console.error("Error changing availability:", error);
+        }
+    }
 
     return (
         <>
@@ -139,11 +168,10 @@ function HomeRestaurant() {
                                         />
 
                                         <span
-                                            className={`rd-vegdot ${
-                                                item.is_veg
-                                                    ? "veg"
-                                                    : "nonveg"
-                                            }`}
+                                            className={`rd-vegdot ${item.is_veg
+                                                ? "veg"
+                                                : "nonveg"
+                                                }`}
                                         ></span>
                                     </div>
 
@@ -162,11 +190,10 @@ function HomeRestaurant() {
                                             </span>
 
                                             <span
-                                                className={`rd-availability ${
-                                                    item.availability
-                                                        ? "on"
-                                                        : "off"
-                                                }`}
+                                                className={`rd-availability ${item.availability
+                                                    ? "on"
+                                                    : "off"
+                                                    }`}
                                             >
                                                 {item.availability
                                                     ? "Available"
@@ -184,12 +211,19 @@ function HomeRestaurant() {
                                         </button>
 
                                         <button
+                                            className="rd-btn-delete"
+                                            onClick={() => handleAvailability(item.id, item.availability)}
+                                        >
+                                            {item.availability ? "Make Unavailable" : "Make Available"}
+                                        </button>
+                                        {/* <button
                                             id={item.id}
                                             className="rd-btn-delete"
                                             onClick={handleDelete}
                                         >
                                             Delete
-                                        </button>
+                                        </button> */}
+
                                     </div>
                                 </div>
                             ))}

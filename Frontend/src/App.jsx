@@ -107,6 +107,5 @@ function App() {
 }
 
 // add phone number
-// availability
 
 export default App

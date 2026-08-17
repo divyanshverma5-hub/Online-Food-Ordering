@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/restaurantMenuPage.css";
-function Home_to_restaurant_page(){
+function Home_to_restaurant_page() {
 
     const { id } = useParams();
 
@@ -14,7 +14,7 @@ function Home_to_restaurant_page(){
     useEffect(() => {
 
         const getData = async () => {
-            let result = await fetch(`http://localhost:3000/details?id=${id}`,{
+            let result = await fetch(`http://localhost:3000/details?id=${id}`, {
                 credentials: "include"
             });
             result = await result.json();
@@ -29,13 +29,18 @@ function Home_to_restaurant_page(){
         getData();
     }, []);
 
-    async function handleAdd(food_id){
+    async function handleAdd(food_id, availability) {
+
+        if (!availability){
+            toast.error("Item is currently unavailable.")
+            return
+        }
 
         let customer_id = localStorage.getItem("id");
-        if (!customer_id){
+        if (!customer_id) {
             toast.error("Login to add items.")
         }
-        else{
+        else {
             let result = await fetch("http://localhost:3000/addToCart", {
                 method: "POST",
                 credentials: "include",
@@ -55,10 +60,11 @@ function Home_to_restaurant_page(){
     const filteredMenu = menu.filter((i) =>
         i.food_name.toLowerCase().includes(search.toLowerCase())
     );
+    // console.log(filteredMenu)
 
     const categories = [...new Set(filteredMenu.map((i) => i.category))];
 
-    return(
+    return (
         <>
             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
             {/* <CustomerNavbar /> */}
@@ -110,6 +116,9 @@ function Home_to_restaurant_page(){
                                                 <p>
                                                     {i.description}
                                                 </p>
+                                                <span>
+                                                    {i.availability ? "Available" : "Unavailable"}
+                                                </span>
 
                                                 <span className="price">
                                                     ₹{i.price}
@@ -119,7 +128,7 @@ function Home_to_restaurant_page(){
                                             <div className="box-imgwrap">
                                                 <img src={i.img_url} alt={i.food_name} />
 
-                                                <button onClick={() => handleAdd(i.id)}>
+                                                <button onClick={() => handleAdd(i.id, i.availability)}>
                                                     ADD
                                                 </button>
                                             </div>
