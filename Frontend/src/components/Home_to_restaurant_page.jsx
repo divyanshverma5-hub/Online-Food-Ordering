@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/restaurantMenuPage.css";
+
 function Home_to_restaurant_page() {
 
     const { id } = useParams();
@@ -31,12 +32,13 @@ function Home_to_restaurant_page() {
 
     async function handleAdd(food_id, availability) {
 
-        if (!availability){
+        if (!availability) {
             toast.error("Item is currently unavailable.")
             return
         }
 
         let customer_id = localStorage.getItem("id");
+
         if (!customer_id) {
             toast.error("Login to add items.")
         }
@@ -47,7 +49,9 @@ function Home_to_restaurant_page() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ food_id })
             });
+
             result = await result.json();
+
             if (result.success) {
                 toast.success(result.msg);
             }
@@ -60,14 +64,12 @@ function Home_to_restaurant_page() {
     const filteredMenu = menu.filter((i) =>
         i.food_name.toLowerCase().includes(search.toLowerCase())
     );
-    // console.log(filteredMenu)
 
     const categories = [...new Set(filteredMenu.map((i) => i.category))];
 
     return (
         <>
             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
-            {/* <CustomerNavbar /> */}
 
             <div className="rhero" style={{ backgroundImage: `url(${data.img_url})` }}>
                 <div className="rhero-overlay">
@@ -77,7 +79,9 @@ function Home_to_restaurant_page() {
             </div>
 
             <div className="rpage">
+
                 <aside className="rside">
+
                     <input
                         className="rsearch"
                         placeholder="Search within menu"
@@ -92,22 +96,32 @@ function Home_to_restaurant_page() {
                             </a>
                         ))}
                     </nav>
+
                 </aside>
 
                 <main className="rmain">
+
                     {categories.map((cat) => (
+
                         <section key={cat} id={cat}>
+
                             <h2 className="rsection-title">
                                 {cat}
                             </h2>
 
                             <div className="menuCard">
+
                                 {filteredMenu
                                     .filter((i) => i.category === cat)
                                     .map((i) => (
+
                                         <div className="box" key={i.id}>
+
                                             <div className="box-info">
-                                                <span className={`vegdot ${i.is_veg ? "veg" : "nonveg"}`}></span>
+
+                                                <span
+                                                    className={`vegdot ${i.is_veg ? "veg" : "nonveg"}`}
+                                                ></span>
 
                                                 <h3>
                                                     {i.food_name}
@@ -116,28 +130,60 @@ function Home_to_restaurant_page() {
                                                 <p>
                                                     {i.description}
                                                 </p>
-                                                <span>
-                                                    {i.availability ? "Available" : "Unavailable"}
-                                                </span>
 
-                                                <span className="price">
-                                                    ₹{i.price}
-                                                </span>
+                                                <div className="box-price-row">
+
+                                                    <span className="price">
+                                                        ₹{i.price}
+                                                    </span>
+
+                                                    <span
+                                                        className={`avail-badge ${i.availability ? "on" : "off"}`}
+                                                    >
+                                                        {i.availability
+                                                            ? "Available"
+                                                            : "Unavailable"}
+                                                    </span>
+
+                                                </div>
+
                                             </div>
 
-                                            <div className="box-imgwrap">
-                                                <img src={i.img_url} alt={i.food_name} />
+                                            <div
+                                                className={`box-imgwrap ${!i.availability
+                                                    ? "box-imgwrap-unavailable"
+                                                    : ""
+                                                    }`}
+                                            >
 
-                                                <button onClick={() => handleAdd(i.id, i.availability)}>
+                                                <img
+                                                    src={i.img_url}
+                                                    alt={i.food_name}
+                                                />
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleAdd(i.id, i.availability)
+                                                    }
+                                                    disabled={!i.availability}
+                                                >
                                                     ADD
                                                 </button>
+
                                             </div>
+
                                         </div>
+
                                     ))}
+
                             </div>
+
                         </section>
+
                     ))}
+
                 </main>
+
             </div>
         </>
     );

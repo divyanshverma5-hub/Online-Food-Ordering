@@ -32,7 +32,7 @@
 }
 .count-badge{
     background: #fdeee0;
-    color: #C8722A;
+    color: var(--brand);
     font-size: 12px;
     font-weight: 800;
     padding: 3px 10px;
@@ -80,7 +80,7 @@
 }
 .r-badge-pending{
     background: #fdeee0;
-    color: #C8722A;
+    color: var(--brand);
 }
 .r-badge-active{
     background: #eaf6d8;
@@ -97,7 +97,7 @@
 .rorder-total{
     font-size: 20px;
     font-weight: 800;
-    color: #C8722A;
+    color: var(--brand);
     margin: 14px 0;
 }
 .rorder-actions{
@@ -110,8 +110,8 @@
 }
 .btn-outline{
     background: #fff;
-    border: 1px solid #C8722A;
-    color: #C8722A;
+    border: 1px solid var(--brand);
+    color: var(--brand);
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 13px;

@@ -24,7 +24,6 @@
     font-size: 14px;
     margin: 0;
 }
-
 .rpage{
     max-width: 1200px;
     margin: 0 auto;
@@ -33,7 +32,6 @@
     gap: 36px;
     align-items: flex-start;
 }
-
 .rside{
     width: 220px;
     flex-shrink: 0;
@@ -46,14 +44,14 @@
 .rsearch{
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 14px;
     outline: none;
 }
 .rsearch:focus{
-    border-color: var(--brand,#16a34a);
+    border-color: var(--brand,var(--brand));
 }
 .rcatnav{
     display: flex;
@@ -62,17 +60,16 @@
 }
 .rcatnav a{
     text-decoration: none;
-    color: #1f2937;
+    color: var(--text-dark);
     font-size: 14px;
     font-weight: 600;
     padding: 8px 10px;
     border-radius: 8px;
 }
 .rcatnav a:hover{
-    background: var(--brand-light,#dcfce7);
-    color: var(--brand-dark,#15803d);
+    background: var(--brand-light,var(--brand-light));
+    color: var(--brand-dark,var(--brand-dark));
 }
-
 .rmain{
     flex: 1;
     min-width: 0;
@@ -91,7 +88,6 @@
     gap: 14px;
     margin-bottom: 36px;
 }
-
 .box{
     display: flex;
     flex-direction: column;
@@ -126,10 +122,10 @@
     border-radius: 50%;
 }
 .vegdot.veg{
-    border-color: #16a34a;
+    border-color: var(--brand);
 }
 .vegdot.veg::after{
-    background: #16a34a;
+    background: var(--brand);
 }
 .vegdot.nonveg{
     border-color: #b91c1c;
@@ -156,7 +152,42 @@
 .box-info .price{
     font-weight: 800;
     font-size: 13px;
-    color: #C8722A;
+    color: var(--brand);
+}
+.box-price-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.avail-badge{
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+.avail-badge.on{
+    background: var(--brand-light);
+    color: var(--brand-dark);
+}
+.avail-badge.off{
+    background: #fee2e2;
+    color: #b91c1c;
+}
+.box-imgwrap-unavailable img{
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+.box-imgwrap button:disabled{
+    background: #eee;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.box-imgwrap button:disabled:hover{
+    background: #eee;
+    color: #999;
 }
 .box-imgwrap{
     order: 1;
@@ -178,7 +209,7 @@
     bottom: -10px;
     transform: translateX(-50%);
     background: #fff;
-    color: #C8722A;
+    color: var(--brand);
     border: 1px solid #eee;
     font-weight: 800;
     font-size: 11px;
@@ -188,10 +219,9 @@
     cursor: pointer;
 }
 .box-imgwrap button:hover{
-    background: #C8722A;
+    background: var(--brand);
     color: #fff;
 }
-
 @media (max-width: 800px){
     .rpage{
         flex-direction: column;

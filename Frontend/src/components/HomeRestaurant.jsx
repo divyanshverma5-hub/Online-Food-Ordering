@@ -9,6 +9,7 @@ import RestaurantNavbar from "./RestaurantNavbar";
 import { toast } from "react-toastify";
 
 function HomeRestaurant() {
+
     const navigate = useNavigate();
 
     const [showEdit, setShowEdit] = useState(false);
@@ -18,6 +19,7 @@ function HomeRestaurant() {
     const [food, setFood] = useState([]);
 
     async function getData() {
+
         const id = localStorage.getItem("id");
 
         let result = await fetch(
@@ -29,27 +31,10 @@ function HomeRestaurant() {
         setData(result.ans);
         setFood(result.food_list);
     }
+
     useEffect(() => {
         getData();
     }, []);
-
-    // async function handleDelete(event) {
-    //     await fetch(
-    //         `http://localhost:3000/homeRestaurant/delete/${event.target.id}`,
-    //         {
-    //             method: "DELETE",
-    //             credentials: "include",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             body: JSON.stringify({ data })
-    //         }
-    //     );
-
-    //     setFood((prev) =>
-    //         prev.filter((item) => item.id !== Number(event.target.id))
-    //     );
-    // }
 
     function handleEdit(item) {
         setSelectedFood(item);
@@ -57,6 +42,7 @@ function HomeRestaurant() {
     }
 
     const grouped = food.reduce((acc, item) => {
+
         const category = item.category || "Other";
 
         if (!acc[category]) {
@@ -66,22 +52,26 @@ function HomeRestaurant() {
         acc[category].push(item);
 
         return acc;
+
     }, {});
 
     async function handleAvailability(food_id, currentAvailability) {
 
         try {
-            const result = await fetch("http://localhost:3000/homeRestaurant/availability", {
-                method: "PATCH",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    food_id: food_id,
-                    availability: !currentAvailability
-                })
-            }
+
+            const result = await fetch(
+                "http://localhost:3000/homeRestaurant/availability",
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        food_id: food_id,
+                        availability: !currentAvailability
+                    })
+                }
             );
 
             const data = await result.json();
@@ -103,8 +93,11 @@ function HomeRestaurant() {
             <RestaurantNavbar isHome={true} />
 
             <div className="rd-header">
+
                 <div>
-                    <h1>{data.restaurant_name}</h1>
+                    <h1>
+                        {data.restaurant_name}
+                    </h1>
 
                     <p className="rd-subtitle">
                         {data.city}
@@ -112,7 +105,9 @@ function HomeRestaurant() {
                 </div>
 
                 <div className="rd-stats">
+
                     <div className="rd-stat-card">
+
                         <span className="rd-stat-value">
                             {food.length}
                         </span>
@@ -120,6 +115,7 @@ function HomeRestaurant() {
                         <span className="rd-stat-label">
                             Menu Items
                         </span>
+
                     </div>
 
                     <Link
@@ -128,10 +124,13 @@ function HomeRestaurant() {
                     >
                         + Add Food
                     </Link>
+
                 </div>
+
             </div>
 
             <div className="rd-page">
+
                 <h2 className="rd-section-title">
                     Your Menu
                 </h2>
@@ -143,25 +142,38 @@ function HomeRestaurant() {
                 )}
 
                 {Object.entries(grouped).map(([category, items]) => (
+
                     <div
                         key={category}
                         className="rd-category-block"
                     >
+
                         <div className="rd-category-head">
-                            <h3>{category}</h3>
+
+                            <h3>
+                                {category}
+                            </h3>
 
                             <span className="rd-category-count">
                                 {items.length}
                             </span>
+
                         </div>
 
                         <div className="rd-grid">
+
                             {items.map((item) => (
+
                                 <div
                                     key={item.id}
-                                    className="rd-card"
+                                    className={`rd-card ${!item.availability
+                                        ? "rd-card-unavailable"
+                                        : ""
+                                        }`}
                                 >
+
                                     <div className="rd-card-imgwrap">
+
                                         <img
                                             src={item.img_url}
                                             alt={item.food_name}
@@ -173,9 +185,11 @@ function HomeRestaurant() {
                                                 : "nonveg"
                                                 }`}
                                         ></span>
+
                                     </div>
 
                                     <div className="rd-card-body">
+
                                         <h3>
                                             {item.food_name}
                                         </h3>
@@ -185,6 +199,7 @@ function HomeRestaurant() {
                                         </p>
 
                                         <div className="rd-card-bottom">
+
                                             <span className="rd-price">
                                                 ₹{item.price}
                                             </span>
@@ -199,10 +214,13 @@ function HomeRestaurant() {
                                                     ? "Available"
                                                     : "Unavailable"}
                                             </span>
+
                                         </div>
+
                                     </div>
 
                                     <div className="rd-card-actions">
+
                                         <button
                                             className="rd-btn-edit"
                                             onClick={() => handleEdit(item)}
@@ -211,25 +229,35 @@ function HomeRestaurant() {
                                         </button>
 
                                         <button
-                                            className="rd-btn-delete"
-                                            onClick={() => handleAvailability(item.id, item.availability)}
+                                            className={
+                                                item.availability
+                                                    ? "rd-btn-toggle-off"
+                                                    : "rd-btn-toggle-on"
+                                            }
+                                            onClick={() =>
+                                                handleAvailability(
+                                                    item.id,
+                                                    item.availability
+                                                )
+                                            }
                                         >
-                                            {item.availability ? "Make Unavailable" : "Make Available"}
+                                            {item.availability
+                                                ? "Make Unavailable"
+                                                : "Make Available"}
                                         </button>
-                                        {/* <button
-                                            id={item.id}
-                                            className="rd-btn-delete"
-                                            onClick={handleDelete}
-                                        >
-                                            Delete
-                                        </button> */}
 
                                     </div>
+
                                 </div>
+
                             ))}
+
                         </div>
+
                     </div>
+
                 ))}
+
             </div>
 
             {showEdit && (

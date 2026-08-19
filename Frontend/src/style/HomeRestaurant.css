@@ -39,7 +39,7 @@
 .rd-stat-value {
     font-size: 20px;
     font-weight: 800;
-    color: #C8722A;
+    color: var(--brand);
 }
 
 .rd-stat-label {
@@ -50,7 +50,7 @@
 
 .rd-add-btn {
     padding: 11px 20px;
-    background: #C8722A;
+    background: var(--brand);
     color: #fff;
     text-decoration: none;
     font-size: 14px;
@@ -59,7 +59,7 @@
 }
 
 .rd-add-btn:hover {
-    background: #b3651f;
+    background: var(--brand-dark);
 }
 
 .rd-page {
@@ -96,7 +96,7 @@
 .rd-category-head h3 {
     margin: 0;
     padding-left: 10px;
-    border-left: 4px solid #C8722A;
+    border-left: 4px solid var(--brand);
     font-size: 16px;
     font-weight: 800;
     color: #1a1a1a;
@@ -104,8 +104,8 @@
 
 .rd-category-count {
     padding: 2px 10px;
-    background: #f3e4d6;
-    color: #C8722A;
+    background: var(--brand-light);
+    color: var(--brand);
     font-size: 12px;
     font-weight: 700;
     border-radius: 999px;
@@ -150,7 +150,7 @@
 }
 
 .rd-vegdot.veg {
-    background: #16a34a;
+    background: var(--brand);
 }
 
 .rd-vegdot.nonveg {
@@ -188,7 +188,7 @@
 .rd-price {
     font-size: 15px;
     font-weight: 800;
-    color: #C8722A;
+    color: var(--brand);
 }
 
 .rd-availability {
@@ -214,7 +214,8 @@
 }
 
 .rd-btn-edit,
-.rd-btn-delete {
+.rd-btn-toggle-off,
+.rd-btn-toggle-on {
     flex: 1;
     padding: 12px;
     border: none;
@@ -225,7 +226,7 @@
 }
 
 .rd-btn-edit {
-    color: #C8722A;
+    color: var(--brand);
     border-right: 1px solid #f2f2f2;
 }
 
@@ -233,10 +234,28 @@
     background: #fdeee0;
 }
 
-.rd-btn-delete {
+.rd-btn-toggle-off {
     color: #c33636;
 }
 
-.rd-btn-delete:hover {
+.rd-btn-toggle-off:hover {
     background: #fbdede;
+}
+
+.rd-btn-toggle-on {
+    color: var(--brand-dark);
+}
+
+.rd-btn-toggle-on:hover {
+    background: var(--brand-light);
+}
+
+.rd-card-unavailable .rd-card-imgwrap img {
+    filter: grayscale(100%);
+    opacity: 0.55;
+}
+
+.rd-card-unavailable .rd-card-body h3,
+.rd-card-unavailable .rd-card-body p {
+    opacity: 0.6;
 }

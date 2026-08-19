@@ -3,6 +3,7 @@ import "../style/addfoodpage.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import { API_BASE } from "../config";
 
 function AddFood() {
     const navigate = useNavigate();
@@ -92,7 +93,7 @@ function AddFood() {
                 formData.append("foodImage", image);
             }
 
-            let result = await fetch("http://localhost:3000/addFood", {
+            let result = await fetch(`${API_BASE}/addFood`, {
                 method: "POST",
                 credentials: "include",
                 body: formData
@@ -117,8 +118,7 @@ function AddFood() {
                     <div className="af-logo__icon">
                         ✕
                     </div>
-
-                    <span>SpiceRush</span>
+                    <span>FoodHub</span>
                 </div>
 
                 <h1>Add New Item</h1>
@@ -181,7 +181,6 @@ function AddFood() {
                                 checked={data.is_veg}
                                 onClick={handleChoice}
                             />
-
                             Is Veg
                         </label>
 

@@ -21,7 +21,7 @@
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: #C8722A;
+    background: var(--brand);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,7 +31,7 @@
 .signup-logo span{
     font-size: 24px;
     font-weight: 800;
-    color: #C8722A;
+    color: var(--brand);
 }
 .signup-page h1{
     font-size: 34px;
@@ -49,7 +49,7 @@
     line-height: 1.5;
 }
 .signup-card{
-   width: 100%;
+    width: 100%;
     background: #fff;
     border: 1px solid #c9f2b0;
     border-radius: 20px;
@@ -113,7 +113,7 @@
 }
 .signup-card .btnSubmit{
     width: 100%;
-    background-color: #C8722A;
+    background-color: var(--brand);
     color: white;
     border-radius: 12px;
     padding: 0.95rem;
@@ -124,7 +124,7 @@
     margin-top: 0.4rem;
 }
 .signup-card .btnSubmit:hover{
-    background-color: #b3651f;
+    background-color: var(--brand-dark);
 }
 .signup-card .divider{
     text-align: center;
@@ -154,7 +154,7 @@
     color: #333;
 }
 .signup-card .switch-line a{
-    color: #C8722A;
+    color: var(--brand);
     font-weight: 800;
     text-decoration: none;
 }

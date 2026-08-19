@@ -3,52 +3,60 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 .navbar{
     display: flex;
     align-items: center;
     gap: 28px;
     background: #fff;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border);
     padding: 10px 32px;
     position: sticky;
     top: 0;
     z-index: 50;
 }
+
 .nav-links{
     display: flex;
     align-items: center;
     gap: 20px;
 }
+
 .nav-right{
     display: flex;
     align-items: center;
     gap: 12px;
     margin-left: auto;
 }
+
 .nav-brand{
     font-size: 22px;
     font-weight: 800;
-    color: #16a34a;
+    color: #111111;
     text-decoration: none;
 }
+
 .nav-links a{
-    color: #1f2937;
+    color: var(--text-dark);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
 }
+
 .nav-links a:hover{
-    color: #16a34a;
+    color: var(--brand);
 }
+
 .nav-location-group{
     display: flex;
     align-items: center;
     gap: 8px;
     background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 4px;
 }
+
 .nav-city{
     appearance: none;
     -webkit-appearance: none;
@@ -58,24 +66,27 @@
     padding: 7px 26px 7px 14px;
     font-size: 13px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-dark);
     cursor: pointer;
     transition: box-shadow 0.15s ease;
 }
+
 .nav-city:hover{
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
+
 .nav-city:focus{
     outline: none;
     box-shadow: 0 0 0 2px #bbf7d0;
 }
+
 .nav-location-btn{
     display: flex;
     align-items: center;
     gap: 5px;
     border: none;
     background: #fff;
-    color: #16a34a;
+    color: var(--brand);
     font-size: 13px;
     font-weight: 700;
     padding: 7px 14px;
@@ -84,35 +95,42 @@
     white-space: nowrap;
     transition: background 0.15s ease;
 }
+
 .nav-location-btn:hover{
     background: #ecfdf5;
 }
+
 .nav-location-icon{
     font-size: 13px;
 }
+
 .nav-search{
     flex: 1;
     max-width: 420px;
 }
+
 .nav-search > div{
     display: flex;
     align-items: center;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 2px 4px 2px 12px;
     background: #f9fafb;
     transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
+
 .nav-search > div:focus-within{
-    border-color: #16a34a;
-    box-shadow: 0 0 0 3px #dcfce7;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
     background: #fff;
 }
+
 .nav-search-icon{
     font-size: 12px;
     margin-right: 6px;
     opacity: 0.6;
 }
+
 .nav-search input{
     flex: 1;
     border: none;
@@ -120,14 +138,16 @@
     outline: none;
     font-size: 13px;
     padding: 7px 0;
-    color: #1f2937;
+    color: var(--text-dark);
 }
+
 .nav-search input::placeholder{
     color: #9ca3af;
 }
+
 .nav-search button{
     border: none;
-    background: #16a34a;
+    background: var(--brand);
     color: #fff;
     font-size: 12px;
     font-weight: 700;
@@ -136,32 +156,38 @@
     cursor: pointer;
     transition: background 0.15s ease;
 }
+
 .nav-search button:hover{
-    background: #15803d;
+    background: var(--brand-dark);
 }
+
 .nav-profile-link{
     text-decoration: none;
 }
+
 .nav-hello{
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #1f2937;
+    color: var(--text-dark);
     font-weight: 700;
     background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     padding: 7px 14px;
     border-radius: 999px;
     transition: background 0.15s ease, border-color 0.15s ease;
 }
+
 .nav-hello:hover{
-    background: var(--brand-light,#dcfce7);
+    background: var(--brand-light,var(--brand-light));
     border-color: #bbf7d0;
 }
+
 .nav-profile-icon{
     font-size: 13px;
 }
+
 .nav-btn{
     border: none;
     border-radius: 999px;
@@ -171,17 +197,20 @@
     text-decoration: none;
     cursor: pointer;
 }
+
 .nav-btn.solid{
-    background: #16a34a;
+    background: var(--brand);
     color: #fff;
 }
+
 .nav-btn.outline{
     background: #fff;
-    border: 1px solid #e5e7eb;
-    color: #1f2937;
+    border: 1px solid var(--border);
+    color: var(--text-dark);
 }
+
 .nav-btn.ghost{
     background: none;
-    color: #1f2937;
+    color: var(--text-dark);
     padding: 8px 4px;
 }
