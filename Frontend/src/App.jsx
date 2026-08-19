@@ -106,6 +106,4 @@ function App() {
   )
 }
 
-// add phone number
-
 export default App

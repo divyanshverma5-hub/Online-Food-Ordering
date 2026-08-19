@@ -18,6 +18,24 @@ export async function checkout(req, res) {
         const customer_id = req.user.id;
         const { address } = req.body;
 
+        const userResult = await pool.query(`SELECT phone FROM users WHERE id = $1`, [customer_id]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                msg: "User not found"
+            });
+        }
+
+        const phone = userResult.rows[0].phone;
+
+        if (!phone || phone.trim() === "") {
+            return res.status(400).json({
+                success: false,
+                msg: "Please add your phone number before placing an order."
+            });
+        }
+
         const cartResult = await pool.query(`SELECT cart.food_id, cart.quantity, food.price, food.restaurant_id
              FROM cart JOIN food
              ON cart.food_id = food.id
