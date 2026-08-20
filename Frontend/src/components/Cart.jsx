@@ -1,56 +1,69 @@
 import React, { useEffect, useState } from "react";
 import "../style/cart.css"
 import CustomerNavbar from "./CustomerNavbar";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 
 function Cart() {
     const [data, setData] = useState([])
     const [total, setTotal] = useState([])
     const [address, setAddress] = useState("")
     const [off1, setOff] = useState(true)
-    const [customerDetail, setCustomerDetail] = useState(null)
+    const [customerDetail, setCustomerDetail] = useState([])
     let customer_id = localStorage.getItem("id")
-    const navigate = useNavigate();
-
-    const phoneMissing = !customerDetail?.phone || customerDetail.phone.trim() === "";
 
     let getData = async () => {
-        let result = await fetch(`http://localhost:3000/cart_menu`, {
+        let result = await fetch(`${API_BASE}/cart_menu`, {
             credentials: "include"
         })
+
         result = await result.json()
+
         setData(result.food)
         setTotal(result.total)
         setCustomerDetail(result.detail)
     }
+
     async function handleQuantity(event, food_id, qty) {
         let sign = event.target.name
-        await fetch("http://localhost:3000/cart/quantity", {
+
+        await fetch(`${API_BASE}/cart/quantity`, {
             method: "PATCH",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ sign, food_id, qty })
         })
+
         await getData()
     }
+
     async function handleOrder() {
+        if (data.length == 0) {
+            return
+        }
+
         let restaurant_id = data[0].restaurant_id
-        let result = await fetch("http://localhost:3000/checkout", {
+
+        let result = await fetch(`${API_BASE}/checkout`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-type": "application/json" },
-            body: JSON.stringify({ amount: getSum(), customer_id, restaurant_id, address })
+            body: JSON.stringify({
+                amount: getSum(),
+                customer_id,
+                restaurant_id,
+                address
+            })
         })
+
         result = await result.json()
-        if (!result.success) {
-            toast.error(result.msg);
-            return;
-        }
+
         const { order } = result
-        result = await fetch("http://localhost:3000/razor_key")
+
+        result = await fetch(`${API_BASE}/razor_key`)
         result = await result.json()
+
         const { key } = result
+
         const options = {
             key,
             amount: order.amount,
@@ -58,7 +71,7 @@ function Cart() {
             name: data[0].restaurant_name,
             description: "Payment for ordering food online",
             order_id: order.id,
-            callback_url: "http://localhost:3000/paymentVerification",
+            callback_url: `${API_BASE}/paymentVerification`,
             prefill: {
                 name: customerDetail.name,
                 email: customerDetail.email,
@@ -68,22 +81,31 @@ function Cart() {
                 color: "#06C167"
             }
         }
+
         const razor = new Razorpay(options)
+
         razor.open()
     }
+
     useEffect(() => {
         getData()
     }, [])
+
     function getSum() {
         let sum = 0
+
         total.map((i) => {
             sum = sum + (i.price * i.quantity)
         })
+
         return sum
     }
+
     function handleAddress(event) {
         let name = event.target.value
+
         setAddress(name)
+
         if (name != "") {
             setOff(false)
         }
@@ -91,62 +113,146 @@ function Cart() {
             setOff(true)
         }
     }
+
     return (
         <>
             <CustomerNavbar />
+
             <div className="cart-page">
                 <div className="cart-header">
                     <h1>My Cart</h1>
-                    <p className="cart-subtitle">Review your items before checkout</p>
+
+                    <p className="cart-subtitle">
+                        Review your items before checkout
+                    </p>
                 </div>
+
                 <div className="cart-card">
                     {data.length == 0 &&
-                        <p className="empty-cart">Your cart is empty</p>
+                        <p className="empty-cart">
+                            Your cart is empty
+                        </p>
                     }
+
                     {data.map((i) => (
                         <div className="cart-item" key={i.id}>
-                            <img src={i.img_url} className="item-img" />
+                            <img
+                                src={i.img_url}
+                                className="item-img"
+                                alt={i.food_name}
+                            />
+
                             <div className="item-info">
                                 <h2>{i.food_name}</h2>
-                                <p className="item-desc">{i.description}</p>
+
+                                <p className="item-desc">
+                                    {i.description}
+                                </p>
                             </div>
+
                             <div className="item-qty">
-                                <button className="qty-btn" name="-" onClick={(event) => handleQuantity(event, i.id, i.quantity)}>-</button>
-                                <span className="qty-value">{i.quantity}</span>
-                                <button className="qty-btn" name="+" onClick={(event) => handleQuantity(event, i.id, i.quantity)}>+</button>
-                            </div>
-                            <div className="item-price">₹{i.price}</div>
-                        </div>
-                    ))}
-                    <div className="bill-section">
-                        <h3 className="bill-title">Final Bill</h3>
-                        {total.map((i) => (
-                            <div className="bill-row" key={i.id}>
-                                <span>{i.food_name} x {i.quantity}</span>
-                                <span>₹{i.price * i.quantity}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="cart-footer">
-                        <div className="total-block">
-                            <p className="total-label">Total Amount</p>
-                            <p className="total-amount">₹{getSum()}</p>
-                        </div>
-                        <input className="address-input" placeholder="Fill Address Before Proceeding*" value={address} onChange={handleAddress} />
-                        {phoneMissing && (
-                            <div className="phone-warning">
-                                <p>⚠️ Please add your phone number before placing an order.</p>
+                                <button
+                                    className="qty-btn"
+                                    name="-"
+                                    onClick={(event) =>
+                                        handleQuantity(event, i.id, i.quantity)
+                                    }
+                                >
+                                    -
+                                </button>
+
+                                <span className="qty-value">
+                                    {i.quantity}
+                                </span>
 
                                 <button
-                                    type="button"
-                                    onClick={() => navigate("/profileCustomer")}
+                                    className="qty-btn"
+                                    name="+"
+                                    onClick={(event) =>
+                                        handleQuantity(event, i.id, i.quantity)
+                                    }
                                 >
-                                    Add
+                                    +
                                 </button>
                             </div>
-                        )}
-                        <button className="place-order-btn" onClick={handleOrder} disabled={off1 || phoneMissing}>Place Order</button>
-                    </div>
+
+                            <div className="item-price">
+                                ₹{i.price}
+                            </div>
+                        </div>
+                    ))}
+
+                    {data.length > 0 &&
+                        <div className="bill-section">
+                            <h3 className="bill-title">
+                                Final Bill
+                            </h3>
+
+                            {total.map((i) => (
+                                <div className="bill-row" key={i.id}>
+                                    <span>
+                                        {i.food_name} x {i.quantity}
+                                    </span>
+
+                                    <span>
+                                        ₹{i.price * i.quantity}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    }
+
+                    {data.length > 0 &&
+                        <div className="cart-footer">
+                            <div className="total-block">
+                                <p className="total-label">
+                                    Total Amount
+                                </p>
+
+                                <p className="total-amount">
+                                    ₹{getSum()}
+                                </p>
+                            </div>
+
+                            <input
+                                className="address-input"
+                                placeholder="Fill Address Before Proceeding*"
+                                value={address}
+                                onChange={handleAddress}
+                            />
+
+                            {!customerDetail.phone &&
+                                <div className="phone-warning">
+                                    <span className="phone-warning-icon">
+                                        ⚠️
+                                    </span>
+
+                                    <span className="phone-warning-text">
+                                        Add your phone number to place an order
+                                    </span>
+
+                                    <a
+                                        className="phone-warning-link"
+                                        href="/profileCustomer"
+                                    >
+                                        Add
+                                    </a>
+                                </div>
+                            }
+
+                            <button
+                                className="place-order-btn"
+                                onClick={handleOrder}
+                                disabled={
+                                    off1 ||
+                                    !customerDetail.phone ||
+                                    data.length == 0
+                                }
+                            >
+                                Place Order
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
         </>
