@@ -74,7 +74,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
                 }
                 {!isGuest &&
                     <Link to="/cart">
-                        Cart {cntCart}
+                        Cart
                     </Link>
                 }
 

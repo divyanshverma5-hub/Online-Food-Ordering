@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "../style/cart.css"
 import CustomerNavbar from "./CustomerNavbar";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
     const [data, setData] = useState([])
     const [total, setTotal] = useState([])
     const [address, setAddress] = useState("")
     const [off1, setOff] = useState(true)
-    const [customerDetail, setCustomerDetail] = useState([])
+    const [customerDetail, setCustomerDetail] = useState(null)
     let customer_id = localStorage.getItem("id")
+    const navigate = useNavigate();
+
+    const phoneMissing = !customerDetail?.phone || customerDetail.phone.trim() === "";
+
     let getData = async () => {
         let result = await fetch(`http://localhost:3000/cart_menu`, {
             credentials: "include"
@@ -37,6 +43,10 @@ function Cart() {
             body: JSON.stringify({ amount: getSum(), customer_id, restaurant_id, address })
         })
         result = await result.json()
+        if (!result.success) {
+            toast.error(result.msg);
+            return;
+        }
         const { order } = result
         result = await fetch("http://localhost:3000/razor_key")
         result = await result.json()
@@ -123,7 +133,19 @@ function Cart() {
                             <p className="total-amount">₹{getSum()}</p>
                         </div>
                         <input className="address-input" placeholder="Fill Address Before Proceeding*" value={address} onChange={handleAddress} />
-                        <button className="place-order-btn" onClick={handleOrder} disabled={off1}>Place Order</button>
+                        {phoneMissing && (
+                            <div className="phone-warning">
+                                <p>⚠️ Please add your phone number before placing an order.</p>
+
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/profileCustomer")}
+                                >
+                                    Add
+                                </button>
+                            </div>
+                        )}
+                        <button className="place-order-btn" onClick={handleOrder} disabled={off1 || phoneMissing}>Place Order</button>
                     </div>
                 </div>
             </div>
