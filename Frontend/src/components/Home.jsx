@@ -196,7 +196,7 @@ export default function Home(){
                 </div>
             </div>
 
-            <div className="home-promo">
+            {/* <div className="home-promo">
                 <div className="home-promo-inner">
                     <div>
                         <h3>Get 50% OFF</h3>
@@ -213,7 +213,7 @@ export default function Home(){
                         Claim Offer
                     </button>
                 </div>
-            </div>
+            </div> */}
 
             {search &&
                 <div
