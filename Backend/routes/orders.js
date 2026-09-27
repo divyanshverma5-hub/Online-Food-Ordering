@@ -7,7 +7,7 @@ router.get("/details", authMiddleware, roleMiddleware("customer"), orderDetails)
 
 router.get("/restaurant/details", authMiddleware, roleMiddleware("restaurant"), restaurantOrderDetails)
 
-router.get("/seeDishes", authMiddleware, roleMiddleware("customer"), seeOrderDishes)
+router.get("/seeDishes", authMiddleware, seeOrderDishes)
 
 router.patch("/changeStatus", authMiddleware, roleMiddleware("restaurant"), changeOrderStatus);
 

@@ -47,39 +47,39 @@ export async function changeOrderStatus(req, res) {
     });
 }
 
-export async function seeOrderDishes(req, res) {
-    const { id } = req.query;
-    const userId = req.user.id;
+// export async function seeOrderDishes(req, res) {
+//     const { id } = req.query;
+//     const userId = req.user.id;
 
-    //now checking if authenticated user and user_in_urlRequest are same or not:
+//     //now checking if authenticated user and user_in_urlRequest are same or not:
 
-    const orderCheck = await pool.query("SELECT * FROM orders WHERE id = $1", [id]);
+//     const orderCheck = await pool.query("SELECT * FROM orders WHERE id = $1", [id]);
 
-    if (orderCheck.rows.length === 0) {
-        return res.status(404).json({
-            success: false,
-            msg: "Order not found"
-        });
-    }
+//     if (orderCheck.rows.length === 0) {
+//         return res.status(404).json({
+//             success: false,
+//             msg: "Order not found"
+//         });
+//     }
 
-    // console.log(orderCheck.rows);
+//     // console.log(orderCheck.rows);
 
-    if (orderCheck.rows[0].customer_id !== userId) {
-        return res.status(403).json({
-            success: false,
-            msg: "You are not allowed to view this order"
-        });
-    }
+//     if (orderCheck.rows[0].customer_id !== userId) {
+//         return res.status(403).json({
+//             success: false,
+//             msg: "You are not allowed to view this order"
+//         });
+//     }
 
 
-    let result = await pool.query("SELECT orderItems.price_at_purchase, orderItems.quantity, food.food_name FROM orderItems JOIN food ON orderItems.food_id = food.id WHERE order_id = $1", [id]);
-    result = result.rows;
+//     let result = await pool.query("SELECT orderItems.price_at_purchase, orderItems.quantity, food.food_name FROM orderItems JOIN food ON orderItems.food_id = food.id WHERE order_id = $1", [id]);
+//     result = result.rows;
 
-    res.json({
-        success: true,
-        dishes: result
-    })
-}
+//     res.json({
+//         success: true,
+//         dishes: result
+//     })
+// }
 
 export async function restaurantOrderDetails(req, res) {
     // let { id } = req.query;
@@ -109,4 +109,49 @@ export async function orderDetails(req, res) {
         msg: "Sent Successfully",
         detail: result
     })
+}
+
+export async function seeOrderDishes(req, res) {
+
+    const { id } = req.query;
+
+    const userId = Number(req.user.id);
+    const role = req.user.role;
+
+    const orderCheck = await pool.query("SELECT customer_id, restaurant_id FROM orders WHERE id = $1", [id]);
+
+    if (orderCheck.rows.length === 0) {
+        return res.status(404).json({
+            success: false,
+            msg: "Order not found"
+        });
+    }
+
+    const order = orderCheck.rows[0];
+
+    // Can see only their own order-
+    if (role === "customer" && Number(order.customer_id) !== userId) {
+        return res.status(403).json({
+            success: false,
+            msg: "You are not allowed to view this order"
+        });
+    }
+    if (role === "restaurant" && Number(order.restaurant_id) !== userId) {
+        return res.status(403).json({
+            success: false,
+            msg: "You are not allowed to view this order"
+        });
+    }
+
+    const result = await pool.query(`SELECT orderItems.price_at_purchase, orderItems.quantity, food.food_name
+         FROM orderItems
+         JOIN food ON orderItems.food_id = food.id
+         WHERE order_id = $1`,
+        [id]
+    );
+
+    res.json({
+        success: true,
+        dishes: result.rows
+    });
 }

@@ -18,7 +18,7 @@ function RestaurantNavbar({ isHome }) {
     const firstName = name?.split(" ")[0];
     return (
         <div className="navbar">
-            <Link to={'/homeRestaurant'} className="nav-brand">SpiceRush</Link>
+            <Link to={'/homeRestaurant'} className="nav-brand">FoodHub</Link>
             <div className="nav-links">
                 {!isHome && <Link to={'/homeRestaurant'}>Dashboard</Link>}
                 <Link to={'/restaurantOrders'}>Orders</Link>

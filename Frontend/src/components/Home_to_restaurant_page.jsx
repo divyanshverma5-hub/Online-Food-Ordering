@@ -71,7 +71,8 @@ function Home_to_restaurant_page() {
         <>
             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
 
-            <div className="rhero" style={{ backgroundImage: `url(${data.img_url})` }}>
+            {/* <div className="rhero" style={{ backgroundImage: `url(${data.img_url})` }}> */}
+            <div className="rhero" style={{ backgroundImage: `url("https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg")` }}>
                 <div className="rhero-overlay">
                     <h1>{data.restaurant_name}</h1>
                     <p>{data.location}</p>

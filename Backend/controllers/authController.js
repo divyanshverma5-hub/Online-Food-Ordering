@@ -58,6 +58,7 @@ export const googleLogin = async (req, res) => {
             {
                 id: user.id,
                 email: user.email,
+                role: "customer"
             },
             process.env.JWT_SECRETKEY,
             {
@@ -69,9 +70,10 @@ export const googleLogin = async (req, res) => {
             success: true,
             msg: "Login done",
             token: jwtToken,
-            id: user.id,
-            name: user.name,
-            email: user.email
+            user
+            // id: user.id,
+            // name: user.name,
+            // email: user.email
         });
     } catch (err) {
 
