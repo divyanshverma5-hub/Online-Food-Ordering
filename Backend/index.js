@@ -16,7 +16,7 @@ import http from "node:http";
 import { initializeSocket } from "./socket/socket.js";
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 
 //middleware:
 app.use(express.json())
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true
 }));
 
@@ -59,7 +59,8 @@ const server = http.createServer(app);
 
 initializeSocket(server); //initializing socket.io
 
-server.listen(port, () => {
+// server.listen(port, () => {
+server.listen(port, "0.0.0.0", () => {
     console.log(`Server running on port ${port}`);
 });
 

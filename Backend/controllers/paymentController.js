@@ -128,7 +128,7 @@ export async function paymentVerification(req, res) {
         await pool.query("DELETE FROM cart WHERE customer_id = ($1)", [details.customer_id])
 
 
-        res.redirect(`http://localhost:5173/cart/confirmation?reference=${razorpay_payment_id}`)
+        res.redirect(`${process.env.FRONTEND_URL}/cart/confirmation?reference=${razorpay_payment_id}`)
     } else {
         res.status(400).json({
             success: false,
