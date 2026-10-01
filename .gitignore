@@ -6,6 +6,7 @@ Backend/.env(1)
 # Frontend
 Frontend/node_modules/
 Frontend/dist/
+Frontend/.env
 
 # OS
 .DS_Store

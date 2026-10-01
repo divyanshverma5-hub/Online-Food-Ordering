@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 import "../style/restaurantMenuPage.css";
+import { API_BASE } from "../config";
 
 function Home_to_restaurant_page() {
 
@@ -15,7 +16,7 @@ function Home_to_restaurant_page() {
     useEffect(() => {
 
         const getData = async () => {
-            let result = await fetch(`http://localhost:3000/details?id=${id}`, {
+            let result = await fetch(`${API_BASE}/details?id=${id}`, {
                 credentials: "include"
             });
             result = await result.json();
@@ -43,7 +44,7 @@ function Home_to_restaurant_page() {
             toast.error("Login to add items.")
         }
         else {
-            let result = await fetch("http://localhost:3000/addToCart", {
+            let result = await fetch(`${API_BASE}/addToCart`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

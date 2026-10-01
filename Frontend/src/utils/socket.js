@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { API_BASE } from "../config";
 
 let socket = null;
 
@@ -13,7 +14,9 @@ export function connectSocket() {
         return null;
     }
 
-    socket = io("http://localhost:3000", { transports: ["websocket"] });
+    socket = io(API_BASE, {
+        transports: ["websocket"]
+    });
 
     socket.on("connect", () => {
         console.log("✅ Socket Connected");
@@ -22,7 +25,6 @@ export function connectSocket() {
             userId,
             role
         });
-
     });
 
     socket.on("disconnect", () => {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../style/editfood.css";
+import { API_BASE } from "../config";
 
 function EditFood({ food, close }) {
 
@@ -78,7 +79,7 @@ function EditFood({ food, close }) {
             formData.append("image", image);
         }
 
-        await fetch("http://localhost:3000/homeRestaurant/edit", {
+        await fetch(`${API_BASE}}/homeRestaurant/edit`, {
             method: "PATCH",
             credentials: "include",
             body: formData

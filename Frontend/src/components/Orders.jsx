@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import "../style/orders.css";
 
 import CustomerNavbar from "./CustomerNavbar";
+import { API_BASE } from "../config";
 
 // import { toast } from "react-toastify";
 // import { getSocket } from "../utils/socket";
@@ -17,8 +18,8 @@ function Orders() {
     async function getData() {
 
         let result = await fetch(
-            // `http://localhost:3000/order/details?id=${customer_id}`,{
-            `http://localhost:3000/order/details`,{
+            // `${API_BASE}/order/details?id=${customer_id}`,{
+            `${API_BASE}/order/details`,{
                 credentials: "include"
             }
         );
@@ -32,7 +33,7 @@ function Orders() {
         for (let order of result.detail) {
 
             let dishResult = await fetch(
-                `http://localhost:3000/order/seeDishes?id=${order.id}`,{
+                `${API_BASE}/order/seeDishes?id=${order.id}`,{
                     credentials: "include"
                 }
             );

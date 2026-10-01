@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import RestaurantNavbar from "./RestaurantNavbar";
 
 import "../style/profile.css";
+import { API_BASE } from "../config";
 
 function ProfileRestaurant() {
     const [data, setData] = useState([]);
@@ -13,7 +14,7 @@ function ProfileRestaurant() {
 
     useEffect(() => {
         const getData = async () => {
-            let result = await fetch(`http://localhost:3000/profileRestaurant`, {
+            let result = await fetch(`${API_BASE}/profileRestaurant`, {
                 credentials: "include"
             });
 
@@ -55,7 +56,7 @@ function ProfileRestaurant() {
         formData.append("image", image);
 
         let result = await fetch(
-            "http://localhost:3000/editRestaurantProfile",
+            `${API_BASE}/editRestaurantProfile`,
             {
                 method: "PATCH",
                 body: formData,

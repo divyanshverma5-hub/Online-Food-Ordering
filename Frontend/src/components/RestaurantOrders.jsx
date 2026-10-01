@@ -1,3 +1,4 @@
+import { API_BASE } from "../config";
 import "../style/restarauntorders.css";
 
 import RestaurantNavbar from "./RestaurantNavbar";
@@ -31,7 +32,7 @@ function RestaurantOrders() {
 
     async function getData() {
 
-        let result = await fetch(`http://localhost:3000/order/restaurant/details?id=${restaurant_id}`, {
+        let result = await fetch(`${API_BASE}/order/restaurant/details?id=${restaurant_id}`, {
             credentials: "include"
         });
         result = await result.json();
@@ -45,7 +46,7 @@ function RestaurantOrders() {
 
     async function seeDishes(order_id) {
 
-        let result = await fetch(`http://localhost:3000/order/seeDishes?id=${order_id}`,{
+        let result = await fetch(`${API_BASE}/order/seeDishes?id=${order_id}`,{
             credentials:"include",
         });
 
@@ -63,7 +64,7 @@ function RestaurantOrders() {
 
     async function handleChoice(choice, order_id) {
 
-        await fetch("http://localhost:3000/order/changeStatus", {
+        await fetch(`${API_BASE}/order/changeStatus`, {
             method: "PATCH",
             credentials:"include",
             headers: {

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../style/customerNavbar.css";
 import ProfileCustomer from "./ProfileCustomer.jsx";
+import { API_BASE } from "../config.js";
 
 function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchData, handleDetectedCity }) {
 
@@ -12,7 +13,7 @@ function CustomerNavbar({ city, cities, handleCity, isHome, isGuest, setSearchDa
 
     useEffect(() => {
         const getCount = async () => {
-            let result = await fetch(`http://localhost:3000/cart/count`,{
+            let result = await fetch(`${API_BASE}/cart/count`,{
                 credentials: "include"
             });
             result = await result.json();

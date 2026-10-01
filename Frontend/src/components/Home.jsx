@@ -5,6 +5,7 @@ import CustomerNavbar from "./CustomerNavbar";
 import Footer from "./Footer";
 
 import "../style/home.css";
+import { API_BASE } from "../config";
 
 export default function Home(){
     const [showVideo, setShowVideo] = useState(false);
@@ -48,7 +49,7 @@ export default function Home(){
     }
 
     async function getData(selectedCity){
-        let result = await fetch(`http://localhost:3000/city/${selectedCity}`);
+        let result = await fetch(`${API_BASE}/city/${selectedCity}`);
         result = await result.json();
 
         setData(result.result);
@@ -64,7 +65,7 @@ export default function Home(){
     }
 
     async function getRestaurantBySearch(searchText){
-        let result = await fetch(`http://localhost:3000/search?category=${searchText}&city=${city}`);
+        let result = await fetch(`${API_BASE}/search?category=${searchText}&city=${city}`);
         result = await result.json();
 
         setSearchData(result.restaurants);

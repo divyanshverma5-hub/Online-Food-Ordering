@@ -7,6 +7,7 @@ import EditFood from "./EditFood";
 import RestaurantNavbar from "./RestaurantNavbar";
 
 import { toast } from "react-toastify";
+import { API_BASE } from "../config";
 
 function HomeRestaurant() {
 
@@ -23,7 +24,7 @@ function HomeRestaurant() {
         const id = localStorage.getItem("id");
 
         let result = await fetch(
-            `http://localhost:3000/homeRestaurant?id=${id}`
+            `${API_BASE}/homeRestaurant?id=${id}`
         );
 
         result = await result.json();
@@ -60,7 +61,7 @@ function HomeRestaurant() {
         try {
 
             const result = await fetch(
-                "http://localhost:3000/homeRestaurant/availability",
+                `${API_BASE}/homeRestaurant/availability`,
                 {
                     method: "PATCH",
                     credentials: "include",

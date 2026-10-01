@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CustomerNavbar from "./CustomerNavbar";
 import { useNavigate } from "react-router-dom";
 import "../style/profile.css";
+import { API_BASE } from "../config";
 function ProfileCustomer(){
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -9,7 +10,7 @@ function ProfileCustomer(){
     const [changeData, setChangeData] = useState(data);
     useEffect(() => {
         let getData = async () => {
-            let result = await fetch(`http://localhost:3000/profileCustomer`,{
+            let result = await fetch(`${API_BASE}/profileCustomer`,{
                 credentials: "include"
             });
             result = await result.json();
@@ -19,7 +20,7 @@ function ProfileCustomer(){
         getData();
     }, []);
     async function handleSubmit(){
-        let result = await fetch("http://localhost:3000/editCustomerProfile", {
+        let result = await fetch(`${API_BASE}/editCustomerProfile`, {
             method: "PATCH",
             credentials: "include",
             headers: { "Content-Type": "application/json" },

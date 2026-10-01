@@ -3,6 +3,7 @@ import {toast} from "react-toastify";
 import {useNavigate,Link} from "react-router-dom";
 import "../style/login.css";
 import Footer from "./Footer";
+import { API_BASE } from "../config";
 function RestaurantLogin(){
     const[data,setData]=useState({
         email:"",
@@ -18,7 +19,7 @@ function RestaurantLogin(){
     },[]);
     async function handleSubmit(event){
         event.preventDefault();
-        let result=await fetch("http://localhost:3000/restaurantLogin",{
+        let result=await fetch(`${API_BASE}/restaurantLogin`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"

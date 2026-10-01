@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import CustomerNavbar from "./CustomerNavbar";
 
 import { GoogleLogin } from "@react-oauth/google";
+import { API_BASE } from "../config";
 
 
 function Login() {
@@ -23,7 +24,7 @@ function Login() {
     }, []);
     async function handleSubmit(event) {
         event.preventDefault();
-        let result = await fetch("http://localhost:3000/login", {
+        let result = await fetch(`${API_BASE}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -56,7 +57,7 @@ function Login() {
 
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
-            const response = await fetch("http://localhost:3000/google", {
+            const response = await fetch(`${API_BASE}/google`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

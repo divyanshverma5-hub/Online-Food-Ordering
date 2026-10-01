@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import CustomerNavbar from "./CustomerNavbar";
 
 import "../style/confirmation.css";
+import { API_BASE } from "../config";
 
 function Confirmation() {
     const [order, setOrder] = useState(null);
@@ -14,7 +15,8 @@ function Confirmation() {
 
     async function getOrder() {
         let result = await fetch(
-            `http://localhost:3000/order/details?id=${customer_id}`,{
+            `${API_BASE}/order/details?id=${customer_id}`,{
+            // `${API_BASE}/order/details?id=${customer_id}`,{
                 credentials: "include"
             }
         );
@@ -33,7 +35,7 @@ function Confirmation() {
         setOrder(latest);
 
         let dishResult = await fetch(
-            `http://localhost:3000/order/seeDishes?id=${latest.id}`
+            `${API_BASE}}/order/seeDishes?id=${latest.id}`
         );
         dishResult = await dishResult.json();
 
