@@ -34,8 +34,16 @@ function Login() {
         result = await result.json();
         console.log(result);
 
+        // if (result.success) {
+        //     document.cookie = "token=" + result.token;
+        //     localStorage.setItem("login", data.email);
+        //     localStorage.setItem("id", result.id);
+        //     localStorage.setItem("role", "customer");
+        //     localStorage.setItem("name", result.name);
+        //     window.location = "/";
+        // }
         if (result.success) {
-            document.cookie = "token=" + result.token;
+            localStorage.setItem("token", result.token);
             localStorage.setItem("login", data.email);
             localStorage.setItem("id", result.id);
             localStorage.setItem("role", "customer");
@@ -70,7 +78,8 @@ function Login() {
             const result = await response.json();
 
             if (result.success) {
-                document.cookie = "token=" + result.token;
+                // document.cookie = "token=" + result.token;
+                localStorage.setItem("token", result.token);
 
                 localStorage.setItem("login", result.user.email);
                 localStorage.setItem("id", result.user.id);

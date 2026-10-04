@@ -1,15 +1,49 @@
 import jwt from "jsonwebtoken";
 
+// export function authMiddleware(req, res, next) {
+
+//     const token = req.cookies.token;
+
+//     if (!token) {
+//         return res.status(401).json({
+//             success: false,
+//             msg: "Authentication required"
+//         });
+//     }
+
+//     try {
+
+//         const decoded = jwt.verify(
+//             token,
+//             process.env.JWT_SECRETKEY
+//         );
+
+//         req.user = decoded;
+
+//         next();
+
+//     } catch (error) {
+
+//         return res.status(401).json({
+//             success: false,
+//             msg: "Invalid or expired token"
+//         });
+
+//     }
+// }
+
 export function authMiddleware(req, res, next) {
 
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
             success: false,
             msg: "Authentication required"
         });
     }
+
+    const token = authHeader.split(" ")[1];
 
     try {
 

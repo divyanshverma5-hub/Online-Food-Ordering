@@ -18,13 +18,20 @@ function Orders() {
     async function getData() {
 
         let result = await fetch(
-            // `${API_BASE}/order/details?id=${customer_id}`,{
-            `${API_BASE}/order/details`,{
-                credentials: "include"
+            `${API_BASE}/order/details`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
             }
         );
 
         result = await result.json();
+
+        if (!result.success) {
+            console.error("Failed to fetch orders:", result.msg);
+            return;
+        }
 
         setDetail(result.detail);
 
@@ -33,8 +40,11 @@ function Orders() {
         for (let order of result.detail) {
 
             let dishResult = await fetch(
-                `${API_BASE}/order/seeDishes?id=${order.id}`,{
-                    credentials: "include"
+                `${API_BASE}/order/seeDishes?id=${order.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 }
             );
 
