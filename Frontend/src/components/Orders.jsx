@@ -48,33 +48,6 @@ function Orders() {
 
     }
 
-    // useEffect(() => {
-
-    //     const socket = getSocket();
-    //     console.log("ORDERS PAGE SOCKET:", socket?.id);
-    //     if (!socket) return;
-
-    //     const handleStatusUpdate = (data) => {
-
-    //         console.log("ORDER STATUS UPDATED:", data);
-
-    //         toast.info(
-    //             `Order #${data.orderId} is now ${data.status}`
-    //         );
-
-    //         getData();
-
-    //     };
-
-    //     socket.on("order-status-updated", handleStatusUpdate);
-
-    //     return () => {
-
-    //         socket.off("order-status-updated", handleStatusUpdate);
-
-    //     };
-
-    // }, []);
 
     useEffect(() => {
         getData();

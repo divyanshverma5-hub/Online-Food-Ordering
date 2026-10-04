@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 
 import Home from './components/Home'
 import Login from './components/Login'
-import Footer from './components/footer'
+import Footer from './components/Footer'
 import RestaurantRegister from './components/RestaurantRegister'
 import HomeRestaurant from './components/HomeRestaurant'
 import AddFood from './components/AddFood'
