@@ -1,3 +1,198 @@
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { toast } from "react-toastify";
+// import CustomerNavbar from "./CustomerNavbar";
+// import "../style/restaurantMenuPage.css";
+// import { API_BASE } from "../config";
+
+// function Home_to_restaurant_page() {
+
+//     const { id } = useParams();
+
+//     const [menu, setMenu] = useState([]);
+//     const [data, setData] = useState([]);
+//     const [search, setSearch] = useState("");
+
+//     useEffect(() => {
+
+//         const getData = async () => {
+//             let result = await fetch(`${API_BASE}/details?id=${id}`, {
+//                 credentials: "include"
+//             });
+//             result = await result.json();
+
+//             let profile = result.profile;
+//             let Menu = result.menu;
+
+//             setData(profile);
+//             setMenu(Menu);
+//         }
+
+//         getData();
+//     }, []);
+
+//     async function handleAdd(food_id, availability) {
+
+//         if (!availability) {
+//             toast.error("Item is currently unavailable.")
+//             return
+//         }
+
+//         let customer_id = localStorage.getItem("id");
+
+//         if (!customer_id) {
+//             toast.error("Login to add items.")
+//         }
+//         else {
+//             let result = await fetch(`${API_BASE}/addToCart`, {
+//                 method: "POST",
+//                 credentials: "include",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ food_id })
+//             });
+
+//             result = await result.json();
+
+//             if (result.success) {
+//                 toast.success(result.msg);
+//             }
+//             else {
+//                 toast.error(result.msg);
+//             }
+//         }
+//     }
+
+//     const filteredMenu = menu.filter((i) =>
+//         i.food_name.toLowerCase().includes(search.toLowerCase())
+//     );
+
+//     const categories = [...new Set(filteredMenu.map((i) => i.category))];
+
+//     return (
+//         <>
+//             <CustomerNavbar isGuest={!localStorage.getItem("id")} />
+
+//             {/* <div className="rhero" style={{ backgroundImage: `url(${data.img_url})` }}> */}
+//             <div className="rhero" style={{ backgroundImage: `url("https://b.zmtcdn.com/data/pictures/7/22645887/48f15dd0608d788c0ab56d19bac1edb0.jpg")` }}>
+//                 <div className="rhero-overlay">
+//                     <h1>{data.restaurant_name}</h1>
+//                     <p>{data.location}</p>
+//                 </div>
+//             </div>
+
+//             <div className="rpage">
+
+//                 <aside className="rside">
+
+//                     <input
+//                         className="rsearch"
+//                         placeholder="Search within menu"
+//                         value={search}
+//                         onChange={(e) => setSearch(e.target.value)}
+//                     />
+
+//                     <nav className="rcatnav">
+//                         {categories.map((c) => (
+//                             <a key={c} href={`#${c}`}>
+//                                 {c}
+//                             </a>
+//                         ))}
+//                     </nav>
+
+//                 </aside>
+
+//                 <main className="rmain">
+
+//                     {categories.map((cat) => (
+
+//                         <section key={cat} id={cat}>
+
+//                             <h2 className="rsection-title">
+//                                 {cat}
+//                             </h2>
+
+//                             <div className="menuCard">
+
+//                                 {filteredMenu
+//                                     .filter((i) => i.category === cat)
+//                                     .map((i) => (
+
+//                                         <div className="box" key={i.id}>
+
+//                                             <div className="box-info">
+
+//                                                 <span
+//                                                     className={`vegdot ${i.is_veg ? "veg" : "nonveg"}`}
+//                                                 ></span>
+
+//                                                 <h3>
+//                                                     {i.food_name}
+//                                                 </h3>
+
+//                                                 <p>
+//                                                     {i.description}
+//                                                 </p>
+
+//                                                 <div className="box-price-row">
+
+//                                                     <span className="price">
+//                                                         ₹{i.price}
+//                                                     </span>
+
+//                                                     <span
+//                                                         className={`avail-badge ${i.availability ? "on" : "off"}`}
+//                                                     >
+//                                                         {i.availability
+//                                                             ? "Available"
+//                                                             : "Unavailable"}
+//                                                     </span>
+
+//                                                 </div>
+
+//                                             </div>
+
+//                                             <div
+//                                                 className={`box-imgwrap ${!i.availability
+//                                                     ? "box-imgwrap-unavailable"
+//                                                     : ""
+//                                                     }`}
+//                                             >
+
+//                                                 <img
+//                                                     src={i.img_url}
+//                                                     alt={i.food_name}
+//                                                 />
+
+//                                                 <button
+//                                                     onClick={() =>
+//                                                         handleAdd(i.id, i.availability)
+//                                                     }
+//                                                     disabled={!i.availability}
+//                                                 >
+//                                                     ADD
+//                                                 </button>
+
+//                                             </div>
+
+//                                         </div>
+
+//                                     ))}
+
+//                             </div>
+
+//                         </section>
+
+//                     ))}
+
+//                 </main>
+
+//             </div>
+//         </>
+//     );
+// }
+
+// export default Home_to_restaurant_page;
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -44,20 +239,28 @@ function Home_to_restaurant_page() {
             toast.error("Login to add items.")
         }
         else {
-            let result = await fetch(`${API_BASE}/addToCart`, {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ food_id })
-            });
+            try {
+                const response = await fetch(`${API_BASE}/addToCart`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: JSON.stringify({ food_id })
+                });
 
-            result = await result.json();
+                const result = await response.json();
 
-            if (result.success) {
-                toast.success(result.msg);
-            }
-            else {
-                toast.error(result.msg);
+                if (!response.ok || !result.success) {
+                    toast.error(result.msg || "Could not add item to cart. Please log in again.");
+                    console.error("Add to cart failed:", response.status, result);
+                    return;
+                }
+
+                toast.success(result.msg || "Added to cart!");
+            } catch (error) {
+                console.error("Add to cart request failed:", error);
+                toast.error("Could not connect to the server. Please try again.");
             }
         }
     }
